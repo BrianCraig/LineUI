@@ -1,6 +1,8 @@
-import 'dart:math';
+import 'dart:math' show pi;
 
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:test_app/helpers/extensions.dart';
 
 enum SpinnerState { loading, success, error }
 
@@ -11,51 +13,41 @@ class Spinner extends StatefulWidget {
   State<Spinner> createState() => _SpinnerState();
 }
 
-const List<Curve> curves = [
-  Curves.decelerate,
-];
-
 class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  Curve actualCurve = Curves.fastOutSlowIn;
-
-  final _random = Random();
+  Duration totalTime = Duration.zero;
+  late final Ticker ticker;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2))
-          ..forward()
-          ..addListener(() {
-            (context as Element).markNeedsBuild();
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _controller.reset();
-              _controller.forward();
-              actualCurve = curves[_random.nextInt(curves.length)];
-            }
-          });
+    ticker = createTicker((duration) {
+      setState(() {
+        totalTime = duration;
+      });
+    });
+    ticker.start();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    ticker.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: SpinnerPainter(_controller.value, actualCurve, 4),
+      painter: SpinnerPainter(
+          totalTime.divide(const Duration(seconds: 2)).fractional(),
+          Curves.decelerate,
+          4),
       child: const SizedBox.square(dimension: 48),
     );
   }
 }
 
 class SpinnerPainter extends CustomPainter {
+  /// Reccomended curve: Curves.decelerate
   SpinnerPainter(this.value, this.curve, this.width);
 
   final double value;

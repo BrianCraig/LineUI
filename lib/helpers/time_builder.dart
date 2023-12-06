@@ -24,7 +24,6 @@ class _DurationBuilderState extends State<DurationBuilder>
     super.initState();
     start = DateTime.now();
     ticker = createTicker((duration) {
-      print(duration);
       (context as Element).markNeedsBuild();
     });
     ticker.start();
