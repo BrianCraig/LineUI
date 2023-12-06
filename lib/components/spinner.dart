@@ -1,21 +1,49 @@
-import 'dart:math' show pi;
+import 'dart:math' show pi, max, min;
 
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:test_app/helpers/extensions.dart';
+import 'package:test_app/helpers/math.dart';
 
 enum SpinnerState { loading, success, error }
 
+const Duration animationResolvedCircle = Duration(milliseconds: 500);
+const Duration animationResolvedWait = Duration(milliseconds: 200);
+const Duration animationResolvedIcon = Duration(milliseconds: 600);
+
+const Duration animationResolvedTotal = Duration(milliseconds: 1300);
+
 class Spinner extends StatefulWidget {
-  const Spinner({super.key});
+  const Spinner({super.key, this.state = SpinnerState.loading});
+
+  final SpinnerState state;
 
   @override
   State<Spinner> createState() => _SpinnerState();
+
+  bool get resolved {
+    return state != SpinnerState.loading;
+  }
 }
 
 class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
   Duration totalTime = Duration.zero;
+  Duration resolvedTime = Duration.zero;
   late final Ticker ticker;
+
+  @override
+  void didUpdateWidget(Spinner oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.resolved && !widget.resolved) {
+      /// Restart
+      if (ticker.isActive) ticker.stop();
+      ticker.start();
+    }
+    if (!oldWidget.resolved && widget.resolved) {
+      /// Resolve
+      resolvedTime = totalTime;
+    }
+  }
 
   @override
   void initState() {
@@ -24,6 +52,10 @@ class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
       setState(() {
         totalTime = duration;
       });
+      if (widget.resolved &&
+          totalTime > resolvedTime + animationResolvedTotal) {
+        ticker.stop();
+      }
     });
     ticker.start();
   }
@@ -37,18 +69,64 @@ class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: SpinnerPainter(
-          totalTime.divide(const Duration(seconds: 2)).fractional(),
-          Curves.decelerate,
-          4),
+      painter: _SpinnerPainter(this, 4),
       child: const SizedBox.square(dimension: 48),
     );
   }
 }
 
-class SpinnerPainter extends CustomPainter {
+class _SpinnerPainter extends CustomPainter {
+  _SpinnerPainter(this.state, this.width);
+
+  final _SpinnerState state;
+  final double width;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Offset.zero & size;
+    final Paint brush = Paint()
+      ..color = const Color.fromARGB(255, 255, 00, 0)
+      ..strokeWidth = width
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    double start = state.totalTime.inSecondsDouble * pi * .7;
+    double length = min(state.totalTime.inSecondsDouble * pi, pi * 2 * .20);
+    if (state.widget.resolved) {
+      double stage = (state.totalTime - state.resolvedTime)
+          .divide(animationResolvedCircle);
+      length = max(length, clampedLerp(0, pi * 2, stage));
+    }
+    canvas.drawArc(
+      rect.deflate(width / 2),
+      start,
+      length,
+      false,
+      brush,
+    );
+    if (state.widget.resolved) {
+      double stage = inverseClampedLerp(
+          0,
+          animationResolvedIcon.inMicroseconds,
+          (state.totalTime -
+                  state.resolvedTime -
+                  animationResolvedCircle -
+                  animationResolvedWait)
+              .inMicroseconds);
+      if (stage > 0) {
+        paintCross(canvas, Offset(size.width / 2, size.height / 2), 8, brush,
+            width, stage);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_SpinnerPainter oldDelegate) => true;
+}
+
+class OldSpinnerPainter extends CustomPainter {
   /// Reccomended curve: Curves.decelerate
-  SpinnerPainter(this.value, this.curve, this.width);
+  OldSpinnerPainter(this.value, this.curve, this.width);
 
   final double value;
   final Curve curve;
@@ -78,7 +156,7 @@ class SpinnerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SpinnerPainter oldDelegate) => true;
+  bool shouldRepaint(OldSpinnerPainter oldDelegate) => true;
 }
 
 void paintCross(Canvas canvas, Offset centerOffset, double width, Paint brush,

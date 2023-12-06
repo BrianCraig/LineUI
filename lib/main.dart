@@ -66,7 +66,9 @@ class MyHomePage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Spinner(),
+              Spinner(
+                state: ref.read(spinnerStateProvider),
+              ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

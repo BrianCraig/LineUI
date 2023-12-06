@@ -1,6 +1,10 @@
-extension DurationDivider on Duration {
+extension DurationExtensions on Duration {
   double divide(Duration otherDuration) {
-    return inMilliseconds / otherDuration.inMilliseconds;
+    return inMicroseconds / otherDuration.inMicroseconds;
+  }
+
+  double get inSecondsDouble {
+    return inMicroseconds * .000001;
   }
 }
 
