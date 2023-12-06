@@ -67,8 +67,7 @@ class SpinnerPainter extends CustomPainter {
       ..color = const Color.fromARGB(255, 255, 00, 0)
       ..strokeWidth = width
       ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeMiterLimit;
+      ..strokeCap = StrokeCap.round;
 
     double start = curve.flipped.transform(value);
     double end = curve.transform(value);
@@ -80,8 +79,31 @@ class SpinnerPainter extends CustomPainter {
       false,
       brush,
     );
+    paintCross(canvas, Offset(size.width / 2, size.height / 2), 8, brush, width,
+        value);
   }
 
   @override
   bool shouldRepaint(SpinnerPainter oldDelegate) => true;
+}
+
+void paintCross(Canvas canvas, Offset centerOffset, double width, Paint brush,
+    double lineWidth, double step) {
+  double distance = width - (lineWidth / 2);
+  Offset start = centerOffset + Offset(-distance, distance);
+  Offset end = centerOffset + Offset(distance, -distance);
+  canvas.drawLine(
+    start,
+    Offset.lerp(start, end, (step * 2).clamp(0, 1))!,
+    brush,
+  );
+  if (step > .5) {
+    start = centerOffset + Offset(-distance, -distance);
+    end = centerOffset + Offset(distance, distance);
+    canvas.drawLine(
+      start,
+      Offset.lerp(start, end, ((step * 2) - 1).clamp(0, 1))!,
+      brush,
+    );
+  }
 }
