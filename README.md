@@ -1,17 +1,7 @@
-# test_app
+# Flutter `the line` UI
 
-A new Flutter project.
+The line UI is a Components Library for Flutter ecosystem, based on the idea of animating lines, focusing on clean Interfaces where movement is the one who tells the message.
 
-## Getting Started
+## TODO
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+First component should be the spinner, it can be in three states, LOADING, SUCCESS or ERROR.

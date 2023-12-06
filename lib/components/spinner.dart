@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 
+enum SpinnerState { loading, success, error }
+
 class Spinner extends StatefulWidget {
   const Spinner({super.key});
 
