@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_app/components/components.dart';
 
+import 'helpers/screen_information.dart';
 import 'providers/providers.dart';
 
 void main() {
@@ -60,22 +61,20 @@ class MyHomePage extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Line UI Component System'),
       ),
-      body: PixelRatio(
-        devicePixelRatio: 3,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Spinner(
-                state: ref.read(spinnerStateProvider),
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: buttons,
-              )
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Spinner(
+              state: ref.read(spinnerStateProvider),
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: buttons,
+            ),
+            ScreenInformation(),
+          ],
         ),
       ),
     );
