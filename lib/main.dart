@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:test_app/components/components.dart';
 
 import 'helpers/screen_information.dart';
@@ -9,28 +10,65 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// The route configuration.
+final GoRouter _router = GoRouter(
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return const HomeScreen();
+      },
+      routes: <RouteBase>[
+        GoRoute(
+          path: 'spinner',
+          builder: (BuildContext context, GoRouterState state) {
+            return SpinnerScreen();
+          },
+        ),
+      ],
+    ),
+  ],
+);
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),
-      child: ProviderScope(
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          home: MyHomePage(),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Home Screen'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => context.go('/spinner'),
+          child: const Text('Go to the Spinner screen'),
         ),
       ),
     );
   }
 }
 
-class MyHomePage extends ConsumerWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        routerConfig: _router,
+      ),
+    );
+  }
+}
+
+class SpinnerScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Widget> buttons =
@@ -75,15 +113,6 @@ class MyHomePage extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: buttons,
-            ),
-            ScreenInformation(),
-            RichText(
-              text: TextSpan(
-                text: 'Hi',
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: MediaQuery.textScalerOf(context).scale(18)),
-              ),
             ),
           ],
         ),

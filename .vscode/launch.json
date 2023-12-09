@@ -16,13 +16,19 @@
             "name": "test_app (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "env": {
+                "GDK_BACKEND": "wayland"
+            }
         },
         {
             "name": "test_app (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "env": {
+                "GDK_BACKEND": "wayland"
+            }
         }
     ]
 }

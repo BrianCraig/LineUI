@@ -4,4 +4,9 @@ The line UI is a Components Library for Flutter ecosystem, based on the idea of 
 
 ## TODO
 
-First component should be the spinner, it can be in three states, LOADING, SUCCESS or ERROR.
+- Implement Buttons.
+- Add colors for Spinner, reccomended to implement Theme before.
+
+## Tech debt
+
+- Refactor Spinner impl. 

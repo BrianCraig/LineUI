@@ -38,7 +38,19 @@ class MyWidget extends StatelessWidget {
         // Check if the renderObject is a RenderView and get the FlutterView
 
         // Your widget's UI
-        return Text("${flutterView.physicalSize}");
+        return Column(
+          children: [
+            Text("${flutterView.physicalSize}"),
+            RichText(
+              text: TextSpan(
+                text: 'Hi',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: MediaQuery.textScalerOf(context).scale(18)),
+              ),
+            ),
+          ],
+        );
       },
     );
   }
