@@ -114,49 +114,21 @@ class _SpinnerPainter extends CustomPainter {
                   animationResolvedWait)
               .inMicroseconds);
       if (stage > 0) {
-        paintCross(canvas, Offset(size.width / 2, size.height / 2), 8, brush,
-            width, stage);
+        switch (state.widget.state) {
+          case SpinnerState.success:
+            paintTick(canvas, Offset(size.width / 2, size.height / 2), 24,
+                brush, width, stage);
+          case SpinnerState.error:
+            paintCross(canvas, Offset(size.width / 2, size.height / 2), 8,
+                brush, width, stage);
+          default:
+        }
       }
     }
   }
 
   @override
   bool shouldRepaint(_SpinnerPainter oldDelegate) => true;
-}
-
-class OldSpinnerPainter extends CustomPainter {
-  /// Reccomended curve: Curves.decelerate
-  OldSpinnerPainter(this.value, this.curve, this.width);
-
-  final double value;
-  final Curve curve;
-  final double width;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Rect rect = Offset.zero & size;
-    final Paint brush = Paint()
-      ..color = const Color.fromARGB(255, 255, 00, 0)
-      ..strokeWidth = width
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    double start = curve.flipped.transform(value);
-    double end = curve.transform(value);
-    double initial = -pi / 2;
-    canvas.drawArc(
-      rect.deflate(width / 2),
-      (pi * 2 * start) + initial,
-      pi * 2 * (end - start),
-      false,
-      brush,
-    );
-    paintCross(canvas, Offset(size.width / 2, size.height / 2), 8, brush, width,
-        value);
-  }
-
-  @override
-  bool shouldRepaint(OldSpinnerPainter oldDelegate) => true;
 }
 
 void paintCross(Canvas canvas, Offset centerOffset, double width, Paint brush,
@@ -175,6 +147,26 @@ void paintCross(Canvas canvas, Offset centerOffset, double width, Paint brush,
     canvas.drawLine(
       start,
       Offset.lerp(start, end, ((step * 2) - 1).clamp(0, 1))!,
+      brush,
+    );
+  }
+}
+
+void paintTick(Canvas canvas, Offset centerOffset, double width, Paint brush,
+    double lineWidth, double step) {
+  width = width - lineWidth;
+  Offset pointA = Offset(width * -.5, width * .125) + centerOffset;
+  Offset pointB = Offset(width * -.25, width * .375) + centerOffset;
+  Offset pointC = Offset(width * .5, width * -.375) + centerOffset;
+  canvas.drawLine(
+    pointA,
+    Offset.lerp(pointA, pointB, (step * 4).clamp(0, 1))!,
+    brush,
+  );
+  if (step > .25) {
+    canvas.drawLine(
+      pointB,
+      Offset.lerp(pointB, pointC, inverseClampedLerp(0.25, 1, step))!,
       brush,
     );
   }

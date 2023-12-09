@@ -14,14 +14,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(1.0)),
+      child: ProviderScope(
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: MyHomePage(),
         ),
-        home: MyHomePage(),
       ),
     );
   }
@@ -74,6 +77,14 @@ class MyHomePage extends ConsumerWidget {
               children: buttons,
             ),
             ScreenInformation(),
+            RichText(
+              text: TextSpan(
+                text: 'Hi',
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: MediaQuery.textScalerOf(context).scale(18)),
+              ),
+            ),
           ],
         ),
       ),
