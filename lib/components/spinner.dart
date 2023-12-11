@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:test_app/helpers/extensions.dart';
 import 'package:test_app/helpers/math.dart';
 
+import 'line_theme.dart';
+
 enum SpinnerState { loading, success, error }
 
 const Duration animationResolvedCircle = Duration(milliseconds: 500);
@@ -69,7 +71,7 @@ class _SpinnerState extends State<Spinner> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _SpinnerPainter(this, 4),
+      painter: _SpinnerPainter(this, LineTheme.of(context).lineWidth),
       child: const SizedBox.square(dimension: 48),
     );
   }

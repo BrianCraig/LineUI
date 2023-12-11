@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_app/components/components.dart';
+import 'package:test_app/screens/buttons_screen.dart';
 
 import 'helpers/screen_information.dart';
 import 'providers/providers.dart';
@@ -25,6 +26,12 @@ final GoRouter _router = GoRouter(
             return SpinnerScreen();
           },
         ),
+        GoRoute(
+          path: 'button',
+          builder: (BuildContext context, GoRouterState state) {
+            return ButtonsScreen();
+          },
+        ),
       ],
     ),
   ],
@@ -41,9 +48,23 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home Screen'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => context.go('/spinner'),
-          child: const Text('Go to the Spinner screen'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.go('/spinner'),
+              child: const Text('Go to the Spinner screen'),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              onPressed: () => context.go('/button'),
+              child: const Text('Go to the Button screen'),
+            ),
+          ],
         ),
       ),
     );
