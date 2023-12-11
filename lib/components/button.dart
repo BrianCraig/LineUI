@@ -30,6 +30,8 @@ class Button extends StatefulWidget {
 class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
   bool active = false;
   bool mouseOver = false;
+  late AnimationController animation;
+  Animation<Color?>? colorAnimation;
 
   _ButtonStatus get status => switch ((active, mouseOver)) {
         (true, _) => _ButtonStatus.active,
@@ -40,22 +42,48 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    animation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = LineTheme.of(context);
+  void setStateWithAnimation(void Function() function, LineTheme theme) {
+    setState(() {
+      _ButtonStatus initialStatus = status;
+      function();
+      if (initialStatus != status) {
+        colorAnimation = ColorTween(
+          begin: colorAnimation!.value,
+          end: calculateBorderColor(theme),
+        ).animate(animation);
+        animation.forward(from: 0);
+      }
+    });
+  }
 
+  Color calculateBorderColor(LineTheme theme) {
     final Color style = switch (widget.style) {
       ButtonStyle.primary => theme.primaryColor,
       ButtonStyle.secondary => theme.secondaryColor,
     };
 
-    Color borderColor = switch (status) {
+    return switch (status) {
       _ButtonStatus.inactive => style.withOpacity(0.5),
       _ButtonStatus.active => style,
       _ButtonStatus.mouseOver => style.withOpacity(0.7),
     };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = LineTheme.of(context);
+    Color borderColor = calculateBorderColor(theme);
+
+    colorAnimation ??= ColorTween(
+      begin: borderColor,
+      end: borderColor,
+    ).animate(animation);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -72,25 +100,30 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (event) => {
-          setState(() {
+          setStateWithAnimation(() {
             mouseOver = true;
-          })
+          }, theme)
         },
         onExit: (event) => {
-          setState(() {
+          setStateWithAnimation(() {
             mouseOver = false;
-          })
+          }, theme)
         },
         child: GestureDetector(
           onTapDown: (details) => {
-            setState(() {
+            setStateWithAnimation(() {
               active = true;
-            })
+            }, theme)
           },
           onTapUp: (details) => {
-            setState(() {
+            setStateWithAnimation(() {
               active = false;
-            })
+            }, theme)
+          },
+          onTapCancel: () => {
+            setStateWithAnimation(() {
+              active = false;
+            }, theme)
           },
           behavior: HitTestBehavior.opaque,
           child: Padding(
