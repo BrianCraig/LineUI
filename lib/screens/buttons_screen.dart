@@ -22,12 +22,18 @@ class ButtonsScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Button(
-                  child: Text('Oh, hi mark'),
+                  child: Text(
+                    'Oh, hi mark',
+                    style: TextStyle(color: LineTheme.of(context).textColor),
+                  ),
                 ),
                 SizedBox(width: 16),
                 Button(
                   style: ButtonStyle.secondary,
-                  child: Text('Oh, hi mark'),
+                  child: Text(
+                    'Oh, hi mark',
+                    style: TextStyle(color: LineTheme.of(context).textColor),
+                  ),
                 ),
               ],
             ),
@@ -37,7 +43,9 @@ class ButtonsScreen extends ConsumerWidget {
               children: [
                 ElevatedButton(
                   onPressed: () => {},
-                  child: const Text('Go to the Button screen'),
+                  child: Text(
+                    'Go to the Button screen',
+                  ),
                 ),
               ],
             ),

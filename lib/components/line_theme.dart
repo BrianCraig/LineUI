@@ -21,6 +21,14 @@ const _defaultTheme = LineTheme(
   accentColor: Color(0xFF67c6d1),
 );
 
+const _darkTheme = LineTheme(
+  textColor: Color(0xFFe6f3e8),
+  backgroundColor: Color(0xFF0a180c),
+  primaryColor: Color(0xFF9bdda5),
+  secondaryColor: Color(0xFF268635),
+  accentColor: Color(0xFF3ad252),
+);
+
 class LineTheme {
   const LineTheme({
     required this.textColor,
@@ -40,6 +48,6 @@ class LineTheme {
   final double lineWidth;
 
   static LineTheme of(BuildContext context) {
-    return _defaultTheme;
+    return _darkTheme;
   }
 }

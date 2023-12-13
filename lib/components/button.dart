@@ -45,7 +45,9 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
     animation = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
-    );
+    )..addListener(() {
+        setState(() {});
+      });
   }
 
   void setStateWithAnimation(void Function() function, LineTheme theme) {
@@ -60,6 +62,12 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
         animation.forward(from: 0);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    animation.dispose();
+    super.dispose();
   }
 
   Color calculateBorderColor(LineTheme theme) {
@@ -89,7 +97,7 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
       decoration: BoxDecoration(
         color: theme.backgroundColor,
         border: Border.all(
-          color: borderColor,
+          color: colorAnimation!.value!,
           width: theme.lineWidth,
           strokeAlign: BorderSide.strokeAlignInside,
         ),
