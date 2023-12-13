@@ -13,7 +13,7 @@ const theme = LineTheme(
 
  */
 
-const _defaultTheme = LineTheme(
+const defaultTheme = LineTheme(
   textColor: Color(0xFF0a0306),
   backgroundColor: Color(0xFFfbf3f7),
   primaryColor: Color(0xFFe16db0),
@@ -21,7 +21,7 @@ const _defaultTheme = LineTheme(
   accentColor: Color(0xFF67c6d1),
 );
 
-const _darkTheme = LineTheme(
+const darkTheme = LineTheme(
   textColor: Color(0xFFe6f3e8),
   backgroundColor: Color(0xFF0a180c),
   primaryColor: Color(0xFF9bdda5),
@@ -47,7 +47,36 @@ class LineTheme {
 
   final double lineWidth;
 
-  static LineTheme of(BuildContext context) {
-    return _darkTheme;
+  static LineTheme? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<LineThemeProvider>()
+        ?.theme;
   }
+
+  static LineTheme of(BuildContext context) {
+    final LineTheme? result = maybeOf(context);
+    assert(result != null, 'No LineThemeProvider found in context');
+    return result!;
+  }
+
+  static Map<String, LineTheme> demoThemes() {
+    return const {
+      "default": defaultTheme,
+      "dark": darkTheme,
+    };
+  }
+}
+
+class LineThemeProvider extends InheritedWidget {
+  const LineThemeProvider({
+    super.key,
+    required this.theme,
+    required super.child,
+  });
+
+  final LineTheme theme;
+
+  @override
+  bool updateShouldNotify(LineThemeProvider oldWidget) =>
+      theme != oldWidget.theme;
 }

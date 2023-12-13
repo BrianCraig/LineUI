@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_app/components/components.dart';
+import 'package:test_app/components/line_theme.dart';
 import 'package:test_app/screens/buttons_screen.dart';
+import 'package:test_app/screens/theme_selector_screen.dart';
 
 import 'helpers/screen_information.dart';
 import 'providers/providers.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 /// The route configuration.
@@ -30,6 +36,12 @@ final GoRouter _router = GoRouter(
           path: 'button',
           builder: (BuildContext context, GoRouterState state) {
             return ButtonsScreen();
+          },
+        ),
+        GoRoute(
+          path: 'theme-selector',
+          builder: (BuildContext context, GoRouterState state) {
+            return ThemeSelectorScreen();
           },
         ),
       ],
@@ -64,6 +76,13 @@ class HomeScreen extends StatelessWidget {
               onPressed: () => context.go('/button'),
               child: const Text('Go to the Button screen'),
             ),
+            SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              onPressed: () => context.go('/theme-selector'),
+              child: const Text('Select Theme'),
+            ),
           ],
         ),
       ),
@@ -71,12 +90,13 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return LineThemeProvider(
+      theme: ref.watch(lineThemeProvider),
       child: MaterialApp.router(
         title: 'Flutter Demo',
         theme: ThemeData(
