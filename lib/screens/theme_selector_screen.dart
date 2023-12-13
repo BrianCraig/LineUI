@@ -2,6 +2,7 @@ import 'package:flutter/material.dart'
     show Scaffold, AppBar, Theme, ElevatedButton;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_app/helpers/extensions.dart';
 import 'package:test_app/providers/providers.dart';
 
 import '../components/components.dart';
@@ -20,7 +21,9 @@ class ThemeSelectorScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ...LineTheme.demoThemes().entries.map<Widget>(
+            ...LineTheme.demoThemes()
+                .entries
+                .map<Widget>(
                   (entry) => Button(
                     onPressed: () => {
                       ref.read(lineThemeProvider.notifier).state = entry.value
@@ -30,6 +33,9 @@ class ThemeSelectorScreen extends ConsumerWidget {
                       style: TextStyle(color: theme.textColor),
                     ),
                   ),
+                )
+                .intercalate(
+                  const SizedBox.square(dimension: 8),
                 ),
           ],
         ),

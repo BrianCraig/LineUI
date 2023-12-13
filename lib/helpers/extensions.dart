@@ -13,3 +13,16 @@ extension Fractional on double {
     return this - floor();
   }
 }
+
+extension InterpolateExtension<T> on Iterable<T> {
+  Iterable<T> intercalate(T element) sync* {
+    final iterator = this.iterator;
+    if (!iterator.moveNext()) return;
+
+    yield iterator.current;
+    while (iterator.moveNext()) {
+      yield element;
+      yield iterator.current;
+    }
+  }
+}
