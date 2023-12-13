@@ -9,8 +9,9 @@ import '../components/components.dart';
 class ThemeSelectorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var theme = LineTheme.of(context);
     return Scaffold(
-      backgroundColor: LineTheme.of(context).backgroundColor,
+      backgroundColor: theme.backgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Select Demo Theme'),
@@ -20,12 +21,13 @@ class ThemeSelectorScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ...LineTheme.demoThemes().entries.map<Widget>(
-                  (entry) => ElevatedButton(
+                  (entry) => Button(
                     onPressed: () => {
                       ref.read(lineThemeProvider.notifier).state = entry.value
                     },
                     child: Text(
                       'Use ${entry.key} theme',
+                      style: TextStyle(color: theme.textColor),
                     ),
                   ),
                 ),

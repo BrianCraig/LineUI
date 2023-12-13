@@ -17,11 +17,13 @@ class Button extends StatefulWidget {
   const Button({
     super.key,
     required this.child,
+    this.onPressed,
     this.style = ButtonStyle.primary,
   });
 
   final Widget child;
   final ButtonStyle style;
+  final void Function()? onPressed;
 
   @override
   State<Button> createState() => _ButtonState();
@@ -107,31 +109,34 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
       ),
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
-        onEnter: (event) => {
+        onEnter: (event) {
           setStateWithAnimation(() {
             mouseOver = true;
-          }, theme)
+          }, theme);
         },
-        onExit: (event) => {
+        onExit: (event) {
           setStateWithAnimation(() {
             mouseOver = false;
-          }, theme)
+          }, theme);
         },
         child: GestureDetector(
-          onTapDown: (details) => {
+          onTapDown: (details) {
+            if (widget.onPressed case final onPressed?) {
+              onPressed();
+            }
             setStateWithAnimation(() {
               active = true;
-            }, theme)
+            }, theme);
           },
-          onTapUp: (details) => {
+          onTapUp: (details) {
             setStateWithAnimation(() {
               active = false;
-            }, theme)
+            }, theme);
           },
-          onTapCancel: () => {
+          onTapCancel: () {
             setStateWithAnimation(() {
               active = false;
-            }, theme)
+            }, theme);
           },
           behavior: HitTestBehavior.opaque,
           child: Padding(
