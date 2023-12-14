@@ -35,7 +35,7 @@ class ThemeSelectorScreen extends ConsumerWidget {
                   ),
                 )
                 .intercalate(
-                  const SizedBox.square(dimension: 8),
+                  Spacing.half,
                 ),
           ],
         ),

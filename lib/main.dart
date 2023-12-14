@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:test_app/apps/town-telly/app.dart';
 import 'package:test_app/components/components.dart';
 import 'package:test_app/components/line_theme.dart';
+import 'package:test_app/helpers/extensions.dart';
 import 'package:test_app/screens/buttons_screen.dart';
 import 'package:test_app/screens/theme_selector_screen.dart';
 
-import 'helpers/screen_information.dart';
 import 'providers/providers.dart';
 
 void main() {
@@ -17,6 +18,37 @@ void main() {
   );
 }
 
+class _Page {
+  _Page(
+      {required this.component, required this.path, required this.buttonText});
+
+  final Widget component;
+  final String path, buttonText;
+}
+
+final List<_Page> pages = [
+  _Page(
+    component: SpinnerScreen(),
+    path: 'spinner',
+    buttonText: 'Spinner Component',
+  ),
+  _Page(
+    component: ButtonsScreen(),
+    path: 'button',
+    buttonText: 'Button Component',
+  ),
+  _Page(
+    component: ThemeSelectorScreen(),
+    path: 'theme-selector',
+    buttonText: 'Select Theme',
+  ),
+  _Page(
+    component: const TownTellyApp(),
+    path: 'app/town-telly',
+    buttonText: 'TownTelly App example',
+  ),
+];
+
 /// The route configuration.
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
@@ -25,26 +57,16 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const HomeScreen();
       },
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'spinner',
-          builder: (BuildContext context, GoRouterState state) {
-            return SpinnerScreen();
-          },
-        ),
-        GoRoute(
-          path: 'button',
-          builder: (BuildContext context, GoRouterState state) {
-            return ButtonsScreen();
-          },
-        ),
-        GoRoute(
-          path: 'theme-selector',
-          builder: (BuildContext context, GoRouterState state) {
-            return ThemeSelectorScreen();
-          },
-        ),
-      ],
+      routes: pages
+          .map<RouteBase>(
+            (page) => GoRoute(
+              path: page.path,
+              builder: (BuildContext context, GoRouterState state) {
+                return page.component;
+              },
+            ),
+          )
+          .toList(),
     ),
   ],
 );
@@ -64,26 +86,15 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          children: [
-            ElevatedButton(
-              onPressed: () => context.go('/spinner'),
-              child: const Text('Go to the Spinner screen'),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            ElevatedButton(
-              onPressed: () => context.go('/button'),
-              child: const Text('Go to the Button screen'),
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            ElevatedButton(
-              onPressed: () => context.go('/theme-selector'),
-              child: const Text('Select Theme'),
-            ),
-          ],
+          children: pages
+              .map<Widget>(
+                (page) => Button(
+                  child: Text(page.buttonText),
+                  onPressed: () => context.go("/${page.path}"),
+                ),
+              )
+              .intercalate(Spacing.half)
+              .toList(),
         ),
       ),
     );
