@@ -37,6 +37,7 @@ class LineTheme {
     required this.secondaryColor,
     required this.accentColor,
     this.lineWidth = 2.0,
+    this.spacing = 16.0,
   });
 
   final Color textColor,
@@ -45,7 +46,7 @@ class LineTheme {
       secondaryColor,
       accentColor;
 
-  final double lineWidth;
+  final double lineWidth, spacing;
 
   static LineTheme? maybeOf(BuildContext context) {
     return context
