@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart'
-    show Scaffold, AppBar, Theme, ElevatedButton;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:test_app/helpers/extensions.dart';
 import 'package:test_app/providers/providers.dart';
@@ -10,14 +8,9 @@ import '../components/components.dart';
 class ThemeSelectorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var theme = LineTheme.of(context);
     return Scaffold(
-      backgroundColor: theme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Select Demo Theme'),
-      ),
-      body: Center(
+      title: 'Select Demo Theme',
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -30,7 +23,6 @@ class ThemeSelectorScreen extends ConsumerWidget {
                     },
                     child: Text(
                       'Use ${entry.key} theme',
-                      style: TextStyle(color: theme.textColor),
                     ),
                   ),
                 )

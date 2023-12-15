@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:test_app/apps/town-telly/app.dart';
+import 'package:test_app/apps/town-telly/app.dart' show TownTellyApp;
 import 'package:test_app/components/components.dart';
 import 'package:test_app/components/line_theme.dart';
 import 'package:test_app/helpers/extensions.dart';
@@ -77,11 +77,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Home Screen'),
-      ),
-      body: Center(
+      title: 'Home Screen',
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,14 +123,14 @@ class SpinnerScreen extends ConsumerWidget {
     final List<Widget> buttons =
         ref.watch(spinnerStateProvider) == SpinnerState.loading
             ? [
-                TextButton(
+                Button(
                     onPressed: () => {
                           ref.read(spinnerStateProvider.notifier).state =
                               SpinnerState.success
                         },
                     child: Text('Success')),
                 SizedBox(width: 16),
-                TextButton(
+                Button(
                     onPressed: () => {
                           ref.read(spinnerStateProvider.notifier).state =
                               SpinnerState.error
@@ -141,7 +138,7 @@ class SpinnerScreen extends ConsumerWidget {
                     child: Text('Error')),
               ]
             : [
-                TextButton(
+                Button(
                     onPressed: () => {
                           ref.read(spinnerStateProvider.notifier).state =
                               SpinnerState.loading
@@ -150,11 +147,8 @@ class SpinnerScreen extends ConsumerWidget {
               ];
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Line UI Component System'),
-      ),
-      body: Center(
+      title: 'Spinner Component',
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
