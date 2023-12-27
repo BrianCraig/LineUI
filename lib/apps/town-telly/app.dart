@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart' hide Text;
+import 'package:responsive_framework/responsive_breakpoints.dart';
 import '../../components/components.dart';
 
 class TownTellyApp extends StatelessWidget {
@@ -7,11 +8,22 @@ class TownTellyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
+    final rb = ResponsiveBreakpoints.of(context);
+    final double titleSize = switch (rb.breakpoint.name) {
+      (DESKTOP) => 2,
+      (TABLET) => 1.5,
+      _ => 1,
+    };
     return Scaffold(
       title: 'Town Telly',
-      child: Padding(
+      child: Container(
         padding: EdgeInsets.symmetric(horizontal: theme.spacing),
-        child: Text(about),
+        alignment: Alignment.topCenter,
+        constraints: BoxConstraints.loose(const Size(960, double.infinity)),
+        child: Text(
+          about,
+          fontSizeFactor: titleSize,
+        ),
       ),
     );
   }

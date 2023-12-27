@@ -10,7 +10,7 @@
             "type": "dart",
             "env": {
                 //"GDK_BACKEND": "wayland",
-                "GDK_SCALE": "2",
+                "GDK_SCALE": "1",
             }
         },
         {

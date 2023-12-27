@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:test_app/apps/town-telly/app.dart' show TownTellyApp;
 import 'package:test_app/components/components.dart';
 import 'package:test_app/components/line_theme.dart';
@@ -105,13 +106,20 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return LineThemeProvider(
       theme: ref.watch(lineThemeProvider),
-      child: MaterialApp.router(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: ResponsiveBreakpoints(
+        breakpoints: const [
+          Breakpoint(start: 0, end: 450, name: MOBILE),
+          Breakpoint(start: 451, end: 800, name: TABLET),
+          Breakpoint(start: 801, end: double.infinity, name: DESKTOP),
+        ],
+        child: MaterialApp.router(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          routerConfig: _router,
         ),
-        routerConfig: _router,
       ),
     );
   }

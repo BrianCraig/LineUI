@@ -46,3 +46,4 @@ app.*.map.json
 
 # Ignore auto-generated
 /linux
+/web
