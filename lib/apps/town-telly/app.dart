@@ -22,7 +22,7 @@ class TownTellyApp extends StatelessWidget {
       _ => 1,
     };
     final double functionalityTitleSize = switch (rb.breakpoint.name) {
-      (DESKTOP) => 3.5,
+      (DESKTOP) => 2.5,
       (TABLET) => 2,
       _ => 1.75,
     };
@@ -83,6 +83,7 @@ class TownTellyApp extends StatelessWidget {
 
     functionalitiesWidgetCreator(FunctionalityDescription functionality) =>
         SwitchContainer(
+          strategy: functionality.strategy,
           child: Column(
             children: [
               Text(
@@ -97,6 +98,24 @@ class TownTellyApp extends StatelessWidget {
           ),
         );
 
+    final functionalityBoxes =
+        functionalities.map<Widget>((f) => functionalitiesWidgetCreator(f));
+
+    final List<Widget> functionalitySection = switch (rb.breakpoint.name) {
+      DESKTOP => [
+          GridView.count(
+            crossAxisSpacing: theme.spacing,
+            mainAxisSpacing: theme.spacing,
+            crossAxisCount: 2,
+            shrinkWrap:
+                true, //This line prevents GridView from occupying as much space as there is.
+            physics: const NeverScrollableScrollPhysics(),
+            children: functionalityBoxes.toList(),
+          )
+        ],
+      _ => functionalityBoxes.intercalate(Spacing.one).toList(),
+    };
+
     return Scaffold(
       title: 'Town Telly',
       child: Container(
@@ -107,9 +126,8 @@ class TownTellyApp extends StatelessWidget {
           children: [
             welcomeWidget,
             Spacing.twice,
-            ...functionalities
-                .map<Widget>((f) => functionalitiesWidgetCreator(f))
-                .intercalate(Spacing.one),
+            ...functionalitySection,
+            Spacing.twice,
           ],
         ),
       ),
@@ -118,10 +136,14 @@ class TownTellyApp extends StatelessWidget {
 }
 
 class FunctionalityDescription {
-  const FunctionalityDescription({required this.title, required this.subtitle});
+  const FunctionalityDescription(
+      {required this.title,
+      required this.subtitle,
+      this.strategy = SwitchContainerStrategy.textIsBackground});
 
   final String title;
   final String subtitle;
+  final SwitchContainerStrategy strategy;
 }
 
 const List<FunctionalityDescription> functionalities = [
@@ -134,14 +156,16 @@ const List<FunctionalityDescription> functionalities = [
     title: 'Live Community Events',
     subtitle:
         'Experience real-time local happenings by tuning in to live streams of events ranging from festivals to town hall meetings, fostering a deeper connection with your community.',
+    strategy: SwitchContainerStrategy.primaryBackgroundTextSwitch,
   ),
   FunctionalityDescription(
-    title: 'Interactive Neighborhood News',
+    title: 'Interactive News',
     subtitle:
-        'Engage with news that matters to you through interactive features, comment sections, and community forums linked to local stories, encouraging dialogue among residents.',
+        'Engage with news that matters to you through interactive features, comment sections, and community forums linked to local stories.',
+    strategy: SwitchContainerStrategy.secondaryBackgroundTextSwitch,
   ),
   FunctionalityDescription(
-    title: 'Exclusive Behind-the-Scenes',
+    title: 'Behind-the-Scenes',
     subtitle:
         'Gain exclusive access to backstage content, interviews, and sneak peeks, exploring the creation of your favorite local shows and events.',
   ),
@@ -150,4 +174,4 @@ const List<FunctionalityDescription> functionalities = [
 const String title = "Local Stories Unleashed";
 
 const String about =
-    'TownTelly is your premier subscription-based local TV streaming service, dedicated to delivering the heart and soul of your town directly to your screens. Offering a diverse array of locally produced shows, news, events, and exclusive content, TownTelly is the go-to platform for embracing the unique flavors and stories of your community.';
+    'TownTelly is your premier subscription-based local TV streaming service, dedicated to delivering the heart and soul of your town directly to your screens. Offering a diverse array of locally produced shows, news, events, and exclusive content, TownTelly embraces the unique flavors and stories of your community.';
