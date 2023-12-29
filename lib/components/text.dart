@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:test_app/components/components.dart';
 
 class Text extends StatelessWidget {
-  const Text(this.text, {super.key, this.fontSizeFactor = 1.0});
+  const Text(this.text, {super.key, this.fontSizeFactor = 1.0, this.textAlign});
 
   final String text;
   final double fontSizeFactor;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class Text extends StatelessWidget {
     final TextScaler textScaler = MediaQuery.textScalerOf(context);
 
     return RichText(
-      textAlign: defaultTextStyle.textAlign ?? TextAlign.start,
+      textAlign: textAlign ?? defaultTextStyle.textAlign ?? TextAlign.start,
       softWrap: defaultTextStyle.softWrap,
       overflow: defaultTextStyle.overflow,
       textScaler: textScaler,
