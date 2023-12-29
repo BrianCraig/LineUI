@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:test_app/helpers/extensions.dart';
+import 'package:line_ui/helpers/extensions.dart';
 
 void main() {
   test('InterpolateExtension intercalate test', () {

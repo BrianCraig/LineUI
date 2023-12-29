@@ -2,8 +2,8 @@ import 'dart:math' show pi, max, min;
 
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
-import 'package:test_app/helpers/extensions.dart';
-import 'package:test_app/helpers/math.dart';
+import 'package:line_ui/helpers/extensions.dart';
+import 'package:line_ui/helpers/math.dart';
 
 import 'line_theme.dart';
 

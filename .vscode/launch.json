@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "test_app",
+            "name": "line_ui",
             "request": "launch",
             "type": "dart",
             "env": {
@@ -14,7 +14,7 @@
             }
         },
         {
-            "name": "test_app (profile mode)",
+            "name": "line_ui (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
@@ -23,7 +23,7 @@
             }
         },
         {
-            "name": "test_app (release mode)",
+            "name": "line_ui (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:responsive_framework/responsive_breakpoints.dart';
-import 'package:test_app/helpers/extensions.dart';
+import 'package:line_ui/helpers/extensions.dart';
 import '../../components/components.dart';
 
 class TownTellyApp extends StatelessWidget {

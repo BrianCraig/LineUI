@@ -2,12 +2,12 @@ import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:test_app/apps/town-telly/app.dart' show TownTellyApp;
-import 'package:test_app/components/components.dart';
-import 'package:test_app/components/line_theme.dart';
-import 'package:test_app/helpers/extensions.dart';
-import 'package:test_app/screens/buttons_screen.dart';
-import 'package:test_app/screens/theme_selector_screen.dart';
+import 'package:line_ui/apps/town-telly/app.dart' show TownTellyApp;
+import 'package:line_ui/components/components.dart';
+import 'package:line_ui/components/line_theme.dart';
+import 'package:line_ui/helpers/extensions.dart';
+import 'package:line_ui/screens/buttons_screen.dart';
+import 'package:line_ui/screens/theme_selector_screen.dart';
 
 import 'providers/providers.dart';
 

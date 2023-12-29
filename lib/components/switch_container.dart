@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/components/line_theme.dart';
+import 'package:line_ui/components/line_theme.dart';
 
 enum SwitchContainerStrategy {
   textIsBackground,

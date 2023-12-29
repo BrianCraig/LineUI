@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/components/components.dart';
+import 'package:line_ui/components/components.dart';
 
 class Text extends StatelessWidget {
   const Text(this.text, {super.key, this.fontSizeFactor = 1.0, this.textAlign});

@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:test_app/helpers/extensions.dart';
-import 'package:test_app/providers/providers.dart';
+import 'package:line_ui/helpers/extensions.dart';
+import 'package:line_ui/providers/providers.dart';
 
 import '../components/components.dart';
 
