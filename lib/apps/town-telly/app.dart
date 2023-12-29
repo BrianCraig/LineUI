@@ -94,6 +94,10 @@ class TownTellyApp extends StatelessWidget {
                 functionality.subtitle,
                 fontSizeFactor: aboutSize,
               ),
+              Spacing.one,
+              const Button(
+                child: Text('Read More'),
+              )
             ],
           ),
         );
@@ -104,8 +108,8 @@ class TownTellyApp extends StatelessWidget {
     final List<Widget> functionalitySection = switch (rb.breakpoint.name) {
       DESKTOP => [
           GridView.count(
-            crossAxisSpacing: theme.spacing,
-            mainAxisSpacing: theme.spacing,
+            crossAxisSpacing: theme.spacing * 2,
+            mainAxisSpacing: theme.spacing * 2,
             crossAxisCount: 2,
             shrinkWrap:
                 true, //This line prevents GridView from occupying as much space as there is.
@@ -114,6 +118,12 @@ class TownTellyApp extends StatelessWidget {
           )
         ],
       _ => functionalityBoxes.intercalate(Spacing.one).toList(),
+    };
+
+    final Widget spacing = switch (rb.breakpoint.name) {
+      DESKTOP => Spacing(ratio: 8),
+      TABLET => Spacing(ratio: 6),
+      _ => Spacing(ratio: 4),
     };
 
     return Scaffold(
@@ -125,6 +135,12 @@ class TownTellyApp extends StatelessWidget {
         child: ListView(
           children: [
             welcomeWidget,
+            spacing,
+            Text(
+              'Engage, React, Stay Connected',
+              textAlign: TextAlign.center,
+              fontSizeFactor: functionalityTitleSize,
+            ),
             Spacing.twice,
             ...functionalitySection,
             Spacing.twice,
