@@ -126,6 +126,58 @@ class TownTellyApp extends StatelessWidget {
       _ => Spacing(ratio: 4),
     };
 
+    final TableColumnWidth iconWidth = switch (rb.breakpoint.name) {
+      (MOBILE) => FixedColumnWidth(90),
+      (TABLET) => FixedColumnWidth(110),
+      _ => FixedColumnWidth(140),
+    };
+
+    getIconBool(bool active) => active
+        ? Padding(
+            padding: EdgeInsets.all(theme.spacing),
+            child: Icon(Icons.task_alt),
+          )
+        : Icon(Icons.highlight_off);
+
+    TableRow getTableRow(ServiceComparison sc) => TableRow(
+          children: [
+            Text(sc.title, fontSizeFactor: aboutSize),
+            getIconBool(sc.townTelly),
+            getIconBool(sc.tv),
+            getIconBool(sc.twitch),
+          ],
+        );
+
+    final Widget comparisionSection = SwitchContainer(
+      strategy: SwitchContainerStrategy.primaryBackgroundTextSwitch,
+      child: Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: {
+          0: const IntrinsicColumnWidth(flex: 1),
+          1: iconWidth,
+          2: iconWidth,
+          3: iconWidth,
+        },
+        children: [
+          TableRow(
+            children: [
+              SizedBox(),
+              Text('TownTelly',
+                  textAlign: TextAlign.center, fontSizeFactor: aboutSize),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: theme.spacing),
+                child: Text('TV',
+                    textAlign: TextAlign.center, fontSizeFactor: aboutSize),
+              ),
+              Text('Twitch',
+                  textAlign: TextAlign.center, fontSizeFactor: aboutSize),
+            ],
+          ),
+          ...comparisons.map(getTableRow),
+        ],
+      ),
+    );
+
     return Scaffold(
       title: 'Town Telly',
       child: Container(
@@ -143,6 +195,14 @@ class TownTellyApp extends StatelessWidget {
             ),
             Spacing.twice,
             ...functionalitySection,
+            spacing,
+            Text(
+              'Your News, Your rules',
+              textAlign: TextAlign.center,
+              fontSizeFactor: functionalityTitleSize,
+            ),
+            Spacing.twice,
+            comparisionSection,
             Spacing.twice,
           ],
         ),
@@ -191,3 +251,62 @@ const String title = "Local Stories Unleashed";
 
 const String about =
     'TownTelly is your premier subscription-based local TV streaming service, dedicated to delivering the heart and soul of your town directly to your screens. Offering a diverse array of locally produced shows, news, events, and exclusive content, TownTelly embraces the unique flavors and stories of your community.';
+
+class ServiceComparison {
+  late String title;
+  late bool townTelly;
+  late bool tv;
+  late bool twitch;
+
+  ServiceComparison({
+    required this.title,
+    required this.townTelly,
+    required this.tv,
+    required this.twitch,
+  });
+}
+
+List<ServiceComparison> comparisons = [
+  ServiceComparison(
+    title: 'Local Creativity and Storytelling',
+    townTelly: true,
+    tv: false,
+    twitch: true,
+  ),
+  ServiceComparison(
+    title: 'Community Connection',
+    townTelly: true,
+    tv: false,
+    twitch: false,
+  ),
+  ServiceComparison(
+    title: 'Personalized Experience',
+    townTelly: true,
+    tv: false,
+    twitch: true,
+  ),
+  ServiceComparison(
+    title: 'Exclusive Insider Access',
+    townTelly: true,
+    tv: false,
+    twitch: false,
+  ),
+  ServiceComparison(
+    title: 'Revenue Streams',
+    townTelly: true,
+    tv: true,
+    twitch: false,
+  ),
+  ServiceComparison(
+    title: 'Ads Control',
+    townTelly: true,
+    tv: false,
+    twitch: true,
+  ),
+  ServiceComparison(
+    title: 'Fair-Revenue Sharing',
+    townTelly: true,
+    tv: false,
+    twitch: false,
+  ),
+];
