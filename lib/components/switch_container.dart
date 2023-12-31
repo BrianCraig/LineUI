@@ -7,6 +7,31 @@ enum SwitchContainerStrategy {
   secondaryBackgroundTextSwitch,
 }
 
+extension ColorContrast on Color {
+  double calculateContrast(Color other) {
+    final brightness1 = (0.299 * red + 0.587 * green + 0.114 * blue);
+    final brightness2 =
+        (0.299 * other.red + 0.587 * other.green + 0.114 * other.blue);
+
+    final contrastRatio = (brightness1 + 0.05) / (brightness2 + 0.05);
+    return contrastRatio;
+  }
+
+  bool isContrastRatioAA(Color other, double contrastRatio) {
+    return calculateContrast(other) >= 4.5;
+  }
+
+  bool isContrastRatioAAA(Color other, double contrastRatio) {
+    return calculateContrast(other) >= 7.0;
+  }
+}
+
+Color bestContrastPicker(Color base, Color a, Color b) =>
+    base.calculateContrast(a) > base.calculateContrast(b) ? a : b;
+
+Color worstContrastPicker(Color base, Color a, Color b) =>
+    base.calculateContrast(a) <= base.calculateContrast(b) ? a : b;
+
 class SwitchContainer extends StatelessWidget {
   const SwitchContainer({
     super.key,
@@ -31,19 +56,35 @@ class SwitchContainer extends StatelessWidget {
           spacing: theme.spacing,
         ),
       SwitchContainerStrategy.primaryBackgroundTextSwitch => LineTheme(
-          textColor: theme.backgroundColor,
+          textColor: bestContrastPicker(
+            theme.primaryColor,
+            theme.textColor,
+            theme.backgroundColor,
+          ),
           backgroundColor: theme.primaryColor,
-          primaryColor: theme.backgroundColor,
+          primaryColor: worstContrastPicker(
+            theme.primaryColor,
+            theme.textColor,
+            theme.backgroundColor,
+          ),
           secondaryColor: theme.secondaryColor,
           accentColor: theme.accentColor,
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
       SwitchContainerStrategy.secondaryBackgroundTextSwitch => LineTheme(
-          textColor: theme.backgroundColor,
+          textColor: bestContrastPicker(
+            theme.secondaryColor,
+            theme.textColor,
+            theme.backgroundColor,
+          ),
           backgroundColor: theme.secondaryColor,
           primaryColor: theme.primaryColor,
-          secondaryColor: theme.backgroundColor,
+          secondaryColor: worstContrastPicker(
+            theme.secondaryColor,
+            theme.textColor,
+            theme.backgroundColor,
+          ),
           accentColor: theme.accentColor,
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
