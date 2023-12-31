@@ -29,6 +29,22 @@ const darkTheme = LineTheme(
   accentColor: Color(0xFF3ad252),
 );
 
+const blueTheme = LineTheme(
+  textColor: Color(0xFF011713),
+  backgroundColor: Color(0xFFfafffe),
+  primaryColor: Color(0xFF14f2d0),
+  secondaryColor: Color(0xFF76aef7),
+  accentColor: Color(0xFF122ec4),
+);
+
+const blueDarkTheme = LineTheme(
+  textColor: Color(0xFFd6faed),
+  backgroundColor: Color(0xFF020f0b),
+  primaryColor: Color(0xFF87f2cb),
+  secondaryColor: Color(0xFF113398),
+  accentColor: Color(0xFF331ae6),
+);
+
 class LineTheme {
   const LineTheme({
     required this.textColor,
@@ -64,6 +80,8 @@ class LineTheme {
     return const {
       "default": defaultTheme,
       "dark": darkTheme,
+      "blue": blueTheme,
+      "blue (dark)": blueDarkTheme,
     };
   }
 }
