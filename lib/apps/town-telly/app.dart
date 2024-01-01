@@ -244,6 +244,7 @@ const List<FunctionalityDescription> functionalities = [
     title: 'Behind-the-Scenes',
     subtitle:
         'Gain exclusive access to backstage content, interviews, and sneak peeks, exploring the creation of your favorite local shows and events.',
+    strategy: SwitchContainerStrategy.accentBackgroundTextSwitch,
   ),
 ];
 
