@@ -1,4 +1,7 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
+
+part 'line_theme.g.dart';
 
 /*
 https://realtimecolors.com custom code
@@ -45,6 +48,7 @@ const blueDarkTheme = LineTheme(
   accentColor: Color(0xFF331ae6),
 );
 
+@CopyWith()
 class LineTheme {
   const LineTheme({
     required this.textColor,
