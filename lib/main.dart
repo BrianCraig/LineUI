@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:line_ui/screens/entity_selector_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:line_ui/apps/town-telly/app.dart' show TownTellyApp;
 import 'package:line_ui/components/components.dart';
@@ -42,6 +43,11 @@ final List<_Page> pages = [
     component: ThemeSelectorScreen(),
     path: 'theme-selector',
     buttonText: 'Select Theme',
+  ),
+  _Page(
+    component: const EntitySelectorScreen(),
+    path: 'entity-selector',
+    buttonText: 'SingleSelector / MultiSelector Component',
   ),
   _Page(
     component: const TownTellyApp(),
