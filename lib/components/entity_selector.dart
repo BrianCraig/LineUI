@@ -5,6 +5,27 @@ import 'line_theme.dart';
 import 'spacing.dart';
 import 'text.dart';
 
+abstract interface class StateLineTheme {
+  LineTheme get base;
+  LineTheme get hover;
+  LineTheme get active;
+}
+
+class BasicStateLineTheme implements StateLineTheme {
+  BasicStateLineTheme({
+    required this.base,
+    required this.hover,
+    required this.active,
+  });
+
+  @override
+  final LineTheme base;
+  @override
+  final LineTheme hover;
+  @override
+  final LineTheme active;
+}
+
 class SingleSelector<T> extends StatefulWidget {
   const SingleSelector({
     super.key,
@@ -22,19 +43,34 @@ class SingleSelector<T> extends StatefulWidget {
 }
 
 class _SingleSelectorState<T> extends State<SingleSelector<T>> {
-  Widget itemToRow(T item) {
-    return SelectorRow<T>(
-      item: item,
-      selected: widget.selectedItem == item,
-      onToggle: () {
-        widget.onChange(item);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
+
+    final stateThemes = BasicStateLineTheme(
+      base: theme,
+      hover: theme.copyWith(
+        textColor: theme.primaryColor,
+        backgroundColor:
+            Color.lerp(theme.backgroundColor, theme.textColor, 0.05)!,
+      ),
+      active: theme.copyWith(
+        textColor: theme.backgroundColor,
+        backgroundColor: theme.primaryColor,
+      ),
+    );
+
+    Widget itemToRow(T item) {
+      return SelectorRow<T>(
+        item: item,
+        selected: widget.selectedItem == item,
+        onToggle: () {
+          widget.onChange(item);
+        },
+        themes: stateThemes,
+      );
+    }
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.backgroundColor,
@@ -47,21 +83,34 @@ class _SingleSelectorState<T> extends State<SingleSelector<T>> {
           Radius.circular(theme.lineWidth * 4),
         ),
       ),
-      child: Column(
-        children:
-            widget.items.map(itemToRow).intercalate(Spacing.half).toList(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: theme.lineWidth,
+          vertical: theme.lineWidth,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Spacing.quarter,
+            ...widget.items.map(itemToRow).intercalate(Spacing.quarter),
+            Spacing.quarter,
+          ],
+        ),
       ),
     );
   }
 }
 
 class SelectorRow<T> extends StatefulWidget {
-  const SelectorRow(
-      {super.key,
-      required this.selected,
-      required this.item,
-      required this.onToggle});
+  const SelectorRow({
+    super.key,
+    required this.selected,
+    required this.item,
+    required this.onToggle,
+    required this.themes,
+  });
 
+  final StateLineTheme themes;
   final bool selected;
   final T item;
   final void Function() onToggle;
@@ -71,29 +120,60 @@ class SelectorRow<T> extends StatefulWidget {
 }
 
 class _SelectorRowState<T> extends State<SelectorRow<T>> {
+  bool mouseOver = false;
+
   @override
   Widget build(BuildContext context) {
-    final theme = LineTheme.of(context);
-    final selectedTheme = theme.copyWith(
-        textColor: theme.primaryColor,
-        backgroundColor:
-            Color.lerp(theme.backgroundColor, theme.textColor, 0.2)!);
+    final theme = switch ((widget.selected, mouseOver)) {
+      (true, _) => widget.themes.active,
+      (false, true) => widget.themes.hover,
+      (false, false) => widget.themes.base,
+    };
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
+      onEnter: (event) {
+        setState(() {
+          mouseOver = true;
+        });
+      },
+      onExit: (event) {
+        setState(() {
+          mouseOver = false;
+        });
+      },
       child: GestureDetector(
         onTap: widget.onToggle,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: theme.lineWidth * 4,
-            vertical: theme.lineWidth * 2,
+        child: LineThemeProvider(
+          theme: theme,
+          child: SelectorRowView<T>(
+            item: widget.item,
           ),
-          child: LineThemeProvider(
-            theme: widget.selected ? selectedTheme : theme,
-            child: Text(
-              widget.item.toString(),
-              key: ValueKey(widget.item),
-            ),
+        ),
+      ),
+    );
+  }
+}
+
+class SelectorRowView<T> extends StatelessWidget {
+  const SelectorRowView({super.key, required this.item});
+
+  final T item;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = LineTheme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(color: theme.backgroundColor),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: theme.lineWidth * 3,
+          vertical: theme.lineWidth * 1,
+        ),
+        child: Center(
+          child: Text(
+            item.toString(),
+            key: ValueKey(item),
           ),
         ),
       ),

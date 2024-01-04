@@ -27,12 +27,15 @@ class EntitySelectorScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SingleSelector(
-              items: items,
-              selectedItem: ref.watch(singleSelectStateProvider),
-              onChange: (value) {
-                ref.read(singleSelectStateProvider.notifier).state = value;
-              },
+            SizedBox(
+              width: 180,
+              child: SingleSelector(
+                items: items,
+                selectedItem: ref.watch(singleSelectStateProvider),
+                onChange: (value) {
+                  ref.read(singleSelectStateProvider.notifier).state = value;
+                },
+              ),
             ),
           ],
         ),
