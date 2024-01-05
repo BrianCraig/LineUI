@@ -1,5 +1,6 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:line_ui/components/switch_container.dart';
 
 part 'line_theme.g.dart';
 
@@ -88,6 +89,12 @@ class LineTheme {
       "blue (dark)": blueDarkTheme,
     };
   }
+
+  bool get isLight => backgroundColor.luminance > textColor.luminance;
+
+  @override
+  String toString() =>
+      'LineTheme: ${isLight ? '[Light]' : '[Dark]'}, primary: $primaryColor';
 }
 
 class LineThemeProvider extends InheritedWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:line_ui/helpers/extensions.dart';
 import 'package:line_ui/providers/providers.dart';
 
 import '../components/components.dart';
@@ -49,6 +48,26 @@ class ThemeDemostration extends StatelessWidget {
   }
 }
 
+class ValueDescription<T> {
+  ValueDescription(this.value, [this.description]);
+
+  final T value;
+  final String? description;
+
+  @override
+  String toString() => description ?? value.toString();
+
+  @override
+  int get hashCode => value.hashCode;
+
+  @override
+  bool operator ==(Object other) => switch (other) {
+        (ValueDescription<T> otherVD) => value == otherVD.value,
+        (ValueDescription otherVD) => value == otherVD.value,
+        (Object other) => value == other
+      };
+}
+
 class ThemeDemostrationRow extends StatelessWidget {
   const ThemeDemostrationRow({
     super.key,
@@ -91,21 +110,20 @@ class ThemeSelectorScreen extends ConsumerWidget {
               theme: ref.read(lineThemeProvider),
             ),
             Spacing.one,
-            ...LineTheme.demoThemes()
-                .entries
-                .map<Widget>(
-                  (entry) => Button(
-                    onPressed: () => {
-                      ref.read(lineThemeProvider.notifier).state = entry.value
-                    },
-                    child: Text(
-                      'Use ${entry.key} theme',
-                    ),
-                  ),
-                )
-                .intercalate(
-                  Spacing.half,
-                ),
+            SizedBox(
+              width: 240,
+              child: SingleSelector(
+                items: LineTheme.demoThemes()
+                    .entries
+                    .map((entry) =>
+                        ValueDescription(entry.value, 'Use ${entry.key} theme'))
+                    .toList(),
+                selectedItem: ValueDescription(ref.watch(lineThemeProvider)),
+                onChange: (descriptor) => {
+                  ref.read(lineThemeProvider.notifier).state = descriptor.value
+                },
+              ),
+            ),
           ],
         ),
       ),

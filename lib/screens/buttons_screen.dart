@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart'
-    show Scaffold, AppBar, Theme, ElevatedButton
-    hide Text, Scaffold;
 import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
