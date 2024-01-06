@@ -39,7 +39,7 @@ class SingleSelector<T> extends StatefulWidget {
   final void Function(T) onChange;
 
   @override
-  State<SingleSelector> createState() => _SingleSelectorState<T>();
+  State<SingleSelector<T>> createState() => _SingleSelectorState<T>();
 }
 
 class _SingleSelectorState<T> extends State<SingleSelector<T>> {
