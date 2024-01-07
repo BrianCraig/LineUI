@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../helpers/math.dart';
+import 'line_theme.dart';
 import 'spacing.dart';
 
 class LinearInput extends StatefulWidget {
@@ -26,6 +28,8 @@ class LinearInput extends StatefulWidget {
   final void Function(double) onChange;
   final String Function(double)? valueToText;
 
+  double get percentage => inverseClampedLerp(from, to, value);
+
   @override
   State<LinearInput> createState() => _LinearInputState();
 }
@@ -37,7 +41,10 @@ class _LinearInputState extends State<LinearInput> {
 
   @override
   Widget build(BuildContext context) {
-    final Widget track = Text('track');
+    final theme = LineTheme.of(context);
+    final Widget track = CustomPaint(
+      painter: _LinearInputPainter(state: this, theme: theme),
+    );
 
     return Row(
       children: [
@@ -45,12 +52,48 @@ class _LinearInputState extends State<LinearInput> {
           Text(valueToText(widget.from)),
           Spacing.half,
         ],
-        Expanded(child: track),
+        Expanded(child: SizedBox(height: theme.lineWidth * 3, child: track)),
         if (widget.showEnd) ...[
-          Text(valueToText(widget.to)),
           Spacing.half,
+          Text(valueToText(widget.to)),
         ],
       ],
     );
   }
+}
+
+class _LinearInputPainter extends CustomPainter {
+  const _LinearInputPainter(
+      {super.repaint, required this.state, required this.theme});
+
+  final _LinearInputState state;
+  final LineTheme theme;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final lw = theme.lineWidth;
+    final wd = state.widget;
+
+    final Paint brush = Paint()
+      ..color = Color.lerp(theme.backgroundColor, theme.textColor, 0.2)!
+      ..strokeWidth = lw
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final x1 = lw * .5;
+    final x2 = size.width - (lw * .5);
+    final y = lw * 1.5;
+
+    canvas.drawLine(Offset(x1, y), Offset(x2, y), brush);
+
+    if (wd.value > wd.from) {
+      brush.color = theme.primaryColor;
+
+      canvas.drawLine(
+          Offset(x1, y), Offset(lerp(x1, x2, wd.percentage), y), brush);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
