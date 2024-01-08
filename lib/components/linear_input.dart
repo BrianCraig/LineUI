@@ -37,6 +37,7 @@ class LinearInput extends StatefulWidget {
 class _LinearInputState extends State<LinearInput> {
   Size? trackSize;
   late double lineWidth;
+  bool grabbing = false;
 
   String valueToText(double value) => widget.valueToText != null
       ? widget.valueToText!(value)
@@ -47,7 +48,7 @@ class _LinearInputState extends State<LinearInput> {
     if (trackSize == null) return;
 
     double value = inverseClampedLerp(
-        (lineWidth * 1.5), trackSize.width - (lineWidth * 1.5), lp.dx);
+        (lineWidth * 2.5), trackSize.width - (lineWidth * 2.5), lp.dx);
 
     widget.onChange(lerp(widget.from, widget.to, value));
   }
@@ -56,16 +57,24 @@ class _LinearInputState extends State<LinearInput> {
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
     lineWidth = theme.lineWidth;
-    final Widget track = GestureDetector(
-      onPanDown: (details) {
-        updateValue(details.localPosition);
-      },
-      onPanCancel: () => print("cancelled"),
-      onPanUpdate: (details) {
-        updateValue(details.localPosition);
-      },
-      child: CustomPaint(
-        painter: _LinearInputPainter(state: this, theme: theme),
+    final Widget track = MouseRegion(
+      cursor: grabbing ? SystemMouseCursors.grabbing : SystemMouseCursors.grab,
+      child: GestureDetector(
+        onPanDown: (details) {
+          updateValue(details.localPosition);
+          grabbing = true;
+        },
+        onPanEnd: (details) {
+          setState(() {
+            grabbing = false;
+          });
+        },
+        onPanUpdate: (details) {
+          updateValue(details.localPosition);
+        },
+        child: CustomPaint(
+          painter: _LinearInputPainter(state: this, theme: theme),
+        ),
       ),
     );
 
@@ -75,7 +84,7 @@ class _LinearInputState extends State<LinearInput> {
           Text(valueToText(widget.from)),
           Spacing.half,
         ],
-        Expanded(child: SizedBox(height: theme.lineWidth * 3, child: track)),
+        Expanded(child: SizedBox(height: theme.lineWidth * 5, child: track)),
         if (widget.showEnd) ...[
           Spacing.half,
           Text(valueToText(widget.to)),
@@ -86,8 +95,7 @@ class _LinearInputState extends State<LinearInput> {
 }
 
 class _LinearInputPainter extends CustomPainter {
-  const _LinearInputPainter(
-      {super.repaint, required this.state, required this.theme});
+  const _LinearInputPainter({required this.state, required this.theme});
 
   final _LinearInputState state;
   final LineTheme theme;
@@ -105,18 +113,20 @@ class _LinearInputPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    final x1 = lw * 1.5;
-    final x2 = size.width - (lw * 1.5);
-    final y = lw * 1.5;
+    final x1 = lw * 2.5;
+    final x2 = size.width - x1;
+    final y = lw * 2.5;
+
+    final xActive = lerp(x1, x2, wd.percentage);
 
     canvas.drawLine(Offset(x1, y), Offset(x2, y), brush);
+    brush.color = theme.primaryColor;
 
     if (wd.value > wd.from) {
-      brush.color = theme.primaryColor;
-
-      canvas.drawLine(
-          Offset(x1, y), Offset(lerp(x1, x2, wd.percentage), y), brush);
+      canvas.drawLine(Offset(x1, y), Offset(xActive, y), brush);
     }
+
+    canvas.drawCircle(Offset(xActive, y), lw * 2, brush);
   }
 
   @override
