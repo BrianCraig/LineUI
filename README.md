@@ -6,7 +6,7 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 ## TODO
 
 - `LinearInput` Demo with play stop animation
-- Add colors for `Spinner``.
+- Add colors for `Spinner`.
 - `Button`s disabled state (`onPressed` = null)
 - `MultiSelector`
 - `LineTheme` into interface, mopve logic to `BasicLineTheme` implements `LineTheme` 

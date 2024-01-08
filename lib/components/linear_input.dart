@@ -35,15 +35,38 @@ class LinearInput extends StatefulWidget {
 }
 
 class _LinearInputState extends State<LinearInput> {
+  Size? trackSize;
+  late double lineWidth;
+
   String valueToText(double value) => widget.valueToText != null
       ? widget.valueToText!(value)
       : value.toString();
 
+  void updateValue(Offset lp) {
+    Size? trackSize = this.trackSize;
+    if (trackSize == null) return;
+
+    double value = inverseClampedLerp(
+        (lineWidth * 1.5), trackSize.width - (lineWidth * 1.5), lp.dx);
+
+    widget.onChange(lerp(widget.from, widget.to, value));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
-    final Widget track = CustomPaint(
-      painter: _LinearInputPainter(state: this, theme: theme),
+    lineWidth = theme.lineWidth;
+    final Widget track = GestureDetector(
+      onPanDown: (details) {
+        updateValue(details.localPosition);
+      },
+      onPanCancel: () => print("cancelled"),
+      onPanUpdate: (details) {
+        updateValue(details.localPosition);
+      },
+      child: CustomPaint(
+        painter: _LinearInputPainter(state: this, theme: theme),
+      ),
     );
 
     return Row(
@@ -71,6 +94,8 @@ class _LinearInputPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    state.trackSize = size;
+
     final lw = theme.lineWidth;
     final wd = state.widget;
 
@@ -80,8 +105,8 @@ class _LinearInputPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    final x1 = lw * .5;
-    final x2 = size.width - (lw * .5);
+    final x1 = lw * 1.5;
+    final x2 = size.width - (lw * 1.5);
     final y = lw * 1.5;
 
     canvas.drawLine(Offset(x1, y), Offset(x2, y), brush);
