@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Icon, Icons;
 import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:line_ui/components/linear_input.dart';
@@ -115,9 +116,92 @@ class LinearInputScreen extends ConsumerWidget {
                     Duration(seconds: seconds.toInt()).toStringMedia(),
               ),
             ),
+            Spacing.one,
+            const SizedBox(
+              width: 320,
+              child: AnimatedLineDemo(),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class AnimatedLineDemo extends StatefulWidget {
+  const AnimatedLineDemo({super.key});
+
+  @override
+  State<AnimatedLineDemo> createState() => _AnimatedLineDemoState();
+}
+
+class _AnimatedLineDemoState extends State<AnimatedLineDemo>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animation;
+  Animation<Color?>? colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    animation = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+      lowerBound: 0,
+      upperBound: 10,
+    )..addListener(() {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    animation.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = LineTheme.of(context);
+    return Row(
+      children: [
+        TapRegion(
+          onTapInside: (event) {
+            if (animation.isCompleted) {
+              animation.forward(from: 0);
+            } else if (animation.isAnimating) {
+              animation.stop();
+              setState(() {});
+            } else {
+              animation.forward();
+            }
+          },
+          child: Icon(
+            animation.isAnimating
+                ? Icons.pause_outlined
+                : Icons.play_arrow_outlined,
+            color: theme.textColor,
+          ),
+        ),
+        Spacing.half,
+        Expanded(
+          child: LinearInput(
+            value: animation.value,
+            onChange: (value) {
+              final isAnim = animation.isAnimating;
+              animation.value = value;
+              if (isAnim) {
+                animation.forward();
+              }
+            },
+            from: 0,
+            to: 10,
+            showStart: false,
+            showEnd: false,
+            valueToText: (seconds) =>
+                Duration(seconds: seconds.toInt()).toStringMedia(),
+          ),
+        ),
+      ],
     );
   }
 }
