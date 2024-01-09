@@ -1,11 +1,15 @@
-import 'package:flutter/material.dart' show Icon, Icons;
-import 'package:flutter/widgets.dart' hide Text;
+import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/widgets.dart' hide Text, Icon;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:line_ui/components/linear_input.dart';
 
 import '../components/components.dart';
 
-extension ToStringMedia on Duration {
+extension DurationExtensions on Duration {
+  static Duration fromSeconds(double seconds) {
+    return Duration(microseconds: (seconds * 1000000).toInt());
+  }
+
   String toStringMedia() {
     var microseconds = inMicroseconds;
     var sign = "";
@@ -198,9 +202,11 @@ class _AnimatedLineDemoState extends State<AnimatedLineDemo>
             showStart: false,
             showEnd: false,
             valueToText: (seconds) =>
-                Duration(seconds: seconds.toInt()).toStringMedia(),
+                DurationExtensions.fromSeconds(seconds).toStringMedia(),
           ),
         ),
+        Spacing.half,
+        Text(DurationExtensions.fromSeconds(animation.value).toStringMedia()),
       ],
     );
   }

@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart' hide Text, Scaffold;
+import 'package:flutter/material.dart' hide Text, Scaffold, Icon;
 
 import 'button.dart';
 import 'line_theme.dart';
 import 'text.dart';
+import 'icon.dart';
 
 class Scaffold extends StatelessWidget {
   const Scaffold({super.key, required this.title, required this.child});
