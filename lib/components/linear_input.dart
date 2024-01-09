@@ -1,6 +1,7 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Text;
 
 import '../helpers/math.dart';
+import 'text.dart';
 import 'line_theme.dart';
 import 'spacing.dart';
 
