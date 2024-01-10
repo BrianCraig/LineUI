@@ -18,3 +18,7 @@ double clampedLerp(double a, double b, double t) {
 double inverseClampedLerp(num a, num b, num value) {
   return ((value - a) / (b - a)).clamp(0.0, 1.0);
 }
+
+int lerpInt(int a, int b, double t) {
+  return (a + (b - a) * t).toInt();
+}

@@ -53,7 +53,7 @@ class _SingleSelectorState<T> extends State<SingleSelector<T>> {
         theme,
         textColor: theme.primaryColor,
         backgroundColor:
-            Color.lerp(theme.backgroundColor, theme.textColor, 0.05)!,
+            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.05),
       ),
       active: LineTheme.copyTheme(
         theme,

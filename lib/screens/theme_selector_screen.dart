@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:line_ui/providers/providers.dart';
 
 import '../components/components.dart';
+import '../helpers/extensions.dart';
 
 class ThemeDemostration extends StatelessWidget {
   const ThemeDemostration({super.key, required this.theme});
@@ -13,7 +14,7 @@ class ThemeDemostration extends StatelessWidget {
   Widget build(BuildContext context) {
     return RoundedContainer(
       background: (theme) =>
-          Color.lerp(theme.backgroundColor, theme.textColor, 0.05)!,
+          ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

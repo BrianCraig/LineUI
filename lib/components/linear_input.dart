@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart' hide Text;
 
+import '../helpers/extensions.dart';
 import '../helpers/math.dart';
 import 'text.dart';
 import 'line_theme.dart';
@@ -109,7 +110,8 @@ class _LinearInputPainter extends CustomPainter {
     final wd = state.widget;
 
     final Paint brush = Paint()
-      ..color = Color.lerp(theme.backgroundColor, theme.textColor, 0.2)!
+      ..color =
+          ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.2)
       ..strokeWidth = lw
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
