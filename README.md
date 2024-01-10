@@ -8,7 +8,6 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 - Add colors for `Spinner`.
 - `Button`s disabled state (`onPressed` = null)
 - `MultiSelector`
-- `LineTheme` into interface, mopve logic to `BasicLineTheme` implements `LineTheme` 
 - `LineThemeTransition` implements `LineTheme`, for transistions between `LineTheme`s. 
 - Animations on `SingleSelector` and `MultiSelector`.
 

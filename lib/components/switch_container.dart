@@ -63,7 +63,7 @@ class SwitchContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
     final newTheme = switch (strategy) {
-      SwitchContainerStrategy.textIsBackground => LineTheme(
+      SwitchContainerStrategy.textIsBackground => BasicLineTheme(
           textColor: theme.backgroundColor,
           backgroundColor: theme.textColor,
           primaryColor: theme.primaryColor,
@@ -72,7 +72,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.primaryBackgroundTextSwitch => LineTheme(
+      SwitchContainerStrategy.primaryBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.primaryColor,
             theme.textColor,
@@ -89,7 +89,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.secondaryBackgroundTextSwitch => LineTheme(
+      SwitchContainerStrategy.secondaryBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.secondaryColor,
             theme.textColor,
@@ -106,7 +106,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.accentBackgroundTextSwitch => LineTheme(
+      SwitchContainerStrategy.accentBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.accentColor,
             theme.textColor,

@@ -49,12 +49,14 @@ class _SingleSelectorState<T> extends State<SingleSelector<T>> {
 
     final stateThemes = BasicStateLineTheme(
       base: theme,
-      hover: theme.copyWith(
+      hover: LineTheme.copyTheme(
+        theme,
         textColor: theme.primaryColor,
         backgroundColor:
             Color.lerp(theme.backgroundColor, theme.textColor, 0.05)!,
       ),
-      active: theme.copyWith(
+      active: LineTheme.copyTheme(
+        theme,
         textColor: theme.backgroundColor,
         backgroundColor: theme.primaryColor,
       ),
