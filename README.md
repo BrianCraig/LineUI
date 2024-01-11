@@ -8,7 +8,6 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 - Add colors for `Spinner`.
 - `Button`s disabled state (`onPressed` = null)
 - `MultiSelector` with Animations.
-- Animations on `SingleSelector`.
 ## Tech debt
 
 - Refactor `Spinner` impl. 

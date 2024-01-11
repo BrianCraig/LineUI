@@ -53,7 +53,7 @@ class _SingleSelectorState<T> extends State<SingleSelector<T>> {
         theme,
         textColor: theme.primaryColor,
         backgroundColor:
-            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.05),
+            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.1),
       ),
       active: LineTheme.copyTheme(
         theme,
@@ -146,8 +146,9 @@ class _SelectorRowState<T> extends State<SelectorRow<T>> {
       },
       child: GestureDetector(
         onTap: widget.onToggle,
-        child: LineThemeProvider(
+        child: AnimatedLineTheme(
           theme: theme,
+          duration: const Duration(milliseconds: 350),
           child: SelectorRowView<T>(
             item: widget.item,
           ),
