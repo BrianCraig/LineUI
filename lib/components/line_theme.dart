@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:line_ui/components/switch_container.dart';
+import 'package:line_ui/helpers/extensions.dart';
+import 'package:line_ui/helpers/math.dart' as math_ext;
 
 /*
 https://realtimecolors.com custom code
@@ -62,6 +64,21 @@ abstract class LineTheme {
       accentColor: accentColor ?? from.accentColor,
       lineWidth: lineWidth ?? from.lineWidth,
       spacing: spacing ?? from.spacing,
+    );
+  }
+
+  static lerp(LineTheme begin, LineTheme end, double t) {
+    return BasicLineTheme(
+      textColor: ColorExtensions.lerp(begin.textColor, end.textColor, t),
+      backgroundColor:
+          ColorExtensions.lerp(begin.backgroundColor, end.backgroundColor, t),
+      primaryColor:
+          ColorExtensions.lerp(begin.primaryColor, end.primaryColor, t),
+      secondaryColor:
+          ColorExtensions.lerp(begin.secondaryColor, end.secondaryColor, t),
+      accentColor: ColorExtensions.lerp(begin.accentColor, end.accentColor, t),
+      lineWidth: math_ext.lerp(begin.lineWidth, end.lineWidth, t),
+      spacing: math_ext.lerp(begin.spacing, end.spacing, t),
     );
   }
 }
@@ -137,4 +154,67 @@ class LineThemeProvider extends InheritedWidget {
   @override
   bool updateShouldNotify(LineThemeProvider oldWidget) =>
       theme != oldWidget.theme;
+}
+
+class LineThemeTween extends Tween<LineTheme> {
+  LineThemeTween({super.begin, super.end});
+
+  @override
+  LineTheme lerp(double t) {
+    assert(begin != null);
+    assert(end != null);
+    return LineTheme.lerp(begin!, end!, t);
+  }
+}
+
+class AnimatedLineTheme extends ImplicitlyAnimatedWidget {
+  /// Creates a widget that animates its `LineTheme` implicitly.
+  const AnimatedLineTheme({
+    super.key,
+    required this.child,
+    required this.theme,
+    super.curve,
+    required super.duration,
+    super.onEnd,
+  });
+
+  final Widget child;
+
+  final LineTheme theme;
+
+  @override
+  ImplicitlyAnimatedWidgetState<AnimatedLineTheme> createState() =>
+      _AnimatedLineThemeState();
+}
+
+class _AnimatedLineThemeState
+    extends ImplicitlyAnimatedWidgetState<AnimatedLineTheme> {
+  Tween<LineTheme>? _theme;
+  late Animation<LineTheme> _themeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() => setState(() {}));
+  }
+
+  @override
+  void forEachTween(TweenVisitor<dynamic> visitor) {
+    _theme = visitor(_theme, widget.theme,
+            (dynamic value) => LineThemeTween(begin: value as LineTheme))
+        as Tween<LineTheme>;
+  }
+
+  @override
+  void didUpdateTweens() {
+    _themeAnimation = animation.drive(_theme!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LineThemeProvider(
+      theme: _themeAnimation.value,
+      child: widget.child,
+    );
+  }
 }
