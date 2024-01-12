@@ -8,7 +8,10 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 - Add colors for `Spinner`.
 - `Button`s disabled state (`onPressed` = null)
 - `MultiSelector` with Animations.
+- animate `LinearInput` Label.
+
 ## Tech debt
 
 - Refactor `Spinner` impl. 
 - Review `Button`s animations design & colors, fix color memoization.
+- `LinearInput` labels, add bottom option, and remove hardcoded `Position` offset.
