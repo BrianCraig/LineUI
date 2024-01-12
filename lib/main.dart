@@ -6,12 +6,12 @@ import 'package:line_ui/screens/linear_input_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:line_ui/apps/town-telly/app.dart' show TownTellyApp;
 import 'package:line_ui/components/components.dart';
-import 'package:line_ui/components/line_theme.dart';
 import 'package:line_ui/helpers/extensions.dart';
 import 'package:line_ui/screens/buttons_screen.dart';
 import 'package:line_ui/screens/theme_selector_screen.dart';
 
 import 'providers/providers.dart';
+import 'screens/label_screen.dart';
 
 void main() {
   runApp(
@@ -29,7 +29,7 @@ class _Page {
   final String path, buttonText;
 }
 
-final List<_Page> pages = [
+final List<_Page> _pages = [
   _Page(
     component: SpinnerScreen(),
     path: 'spinner',
@@ -56,6 +56,11 @@ final List<_Page> pages = [
     buttonText: 'LinearInput Component',
   ),
   _Page(
+    component: const LabelScreen(),
+    path: 'label',
+    buttonText: 'Label Component',
+  ),
+  _Page(
     component: const TownTellyApp(),
     path: 'app/town-telly',
     buttonText: 'TownTelly App example',
@@ -70,7 +75,7 @@ final GoRouter _router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const HomeScreen();
       },
-      routes: pages
+      routes: _pages
           .map<RouteBase>(
             (page) => GoRoute(
               path: page.path,
@@ -96,7 +101,7 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
-          children: pages
+          children: _pages
               .map<Widget>(
                 (page) => Button(
                   child: Text(page.buttonText),
@@ -149,7 +154,7 @@ class SpinnerScreen extends ConsumerWidget {
                               SpinnerState.success
                         },
                     child: Text('Success')),
-                SizedBox(width: 16),
+                Spacing.one,
                 Button(
                     onPressed: () => {
                           ref.read(spinnerStateProvider.notifier).state =
@@ -175,7 +180,7 @@ class SpinnerScreen extends ConsumerWidget {
             Spinner(
               state: ref.read(spinnerStateProvider),
             ),
-            SizedBox(height: 16),
+            Spacing.one,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: buttons,
