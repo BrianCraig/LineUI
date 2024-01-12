@@ -15,8 +15,23 @@ class LabelScreen extends StatelessWidget {
           children: <Widget>[
             Label.text('Simple text label'),
             Spacing.one,
-            Label(
+            const Label(
               child: Text('Simple label with text child widget'),
+            ),
+            Spacing.one,
+            Label.text(
+              'Label with primaryBackgroundTextSwitch Strategy',
+              strategy: SwitchThemeStrategy.primaryBackgroundTextSwitch,
+            ),
+            Spacing.one,
+            Label.text(
+              'Label with secondaryBackgroundTextSwitch Strategy',
+              strategy: SwitchThemeStrategy.secondaryBackgroundTextSwitch,
+            ),
+            Spacing.one,
+            Label.text(
+              'Label with accentBackgroundTextSwitch Strategy',
+              strategy: SwitchThemeStrategy.accentBackgroundTextSwitch,
             ),
           ],
         ),
