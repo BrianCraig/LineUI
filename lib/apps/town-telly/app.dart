@@ -149,7 +149,7 @@ class TownTellyApp extends StatelessWidget {
         );
 
     final Widget comparisionSection = SwitchContainer(
-      strategy: SwitchContainerStrategy.primaryBackgroundTextSwitch,
+      strategy: SwitchThemeStrategy.primaryBackgroundTextSwitch,
       child: Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         columnWidths: {
@@ -215,11 +215,11 @@ class FunctionalityDescription {
   const FunctionalityDescription(
       {required this.title,
       required this.subtitle,
-      this.strategy = SwitchContainerStrategy.textIsBackground});
+      this.strategy = SwitchThemeStrategy.textIsBackground});
 
   final String title;
   final String subtitle;
-  final SwitchContainerStrategy strategy;
+  final SwitchThemeStrategy strategy;
 }
 
 const List<FunctionalityDescription> functionalities = [
@@ -232,19 +232,19 @@ const List<FunctionalityDescription> functionalities = [
     title: 'Live Community Events',
     subtitle:
         'Experience real-time local happenings by tuning in to live streams of events ranging from festivals to town hall meetings, fostering a deeper connection with your community.',
-    strategy: SwitchContainerStrategy.primaryBackgroundTextSwitch,
+    strategy: SwitchThemeStrategy.primaryBackgroundTextSwitch,
   ),
   FunctionalityDescription(
     title: 'Interactive News',
     subtitle:
         'Engage with news that matters to you through interactive features, comment sections, and community forums linked to local stories.',
-    strategy: SwitchContainerStrategy.secondaryBackgroundTextSwitch,
+    strategy: SwitchThemeStrategy.secondaryBackgroundTextSwitch,
   ),
   FunctionalityDescription(
     title: 'Behind-the-Scenes',
     subtitle:
         'Gain exclusive access to backstage content, interviews, and sneak peeks, exploring the creation of your favorite local shows and events.',
-    strategy: SwitchContainerStrategy.accentBackgroundTextSwitch,
+    strategy: SwitchThemeStrategy.accentBackgroundTextSwitch,
   ),
 ];
 

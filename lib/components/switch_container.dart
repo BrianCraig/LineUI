@@ -1,9 +1,11 @@
 import 'dart:math' show pow;
 
-import 'package:flutter/material.dart';
-import 'package:line_ui/components/line_theme.dart';
+import 'package:flutter/widgets.dart';
 
-enum SwitchContainerStrategy {
+import 'line_theme.dart';
+import 'container.dart';
+
+enum SwitchThemeStrategy {
   textIsBackground,
   primaryBackgroundTextSwitch,
   secondaryBackgroundTextSwitch,
@@ -49,21 +51,21 @@ Color bestContrastPicker(Color base, Color a, Color b) =>
 Color worstContrastPicker(Color base, Color a, Color b) =>
     base.calculateContrast(a) <= base.calculateContrast(b) ? a : b;
 
-class SwitchContainer extends StatelessWidget {
-  const SwitchContainer({
+class SwitchTheme extends StatelessWidget {
+  const SwitchTheme({
     super.key,
     required this.child,
-    this.strategy = SwitchContainerStrategy.textIsBackground,
+    this.strategy = SwitchThemeStrategy.textIsBackground,
   });
 
   final Widget child;
-  final SwitchContainerStrategy strategy;
+  final SwitchThemeStrategy strategy;
 
   @override
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
     final newTheme = switch (strategy) {
-      SwitchContainerStrategy.textIsBackground => BasicLineTheme(
+      SwitchThemeStrategy.textIsBackground => BasicLineTheme(
           textColor: theme.backgroundColor,
           backgroundColor: theme.textColor,
           primaryColor: theme.primaryColor,
@@ -72,7 +74,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.primaryBackgroundTextSwitch => BasicLineTheme(
+      SwitchThemeStrategy.primaryBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.primaryColor,
             theme.textColor,
@@ -89,7 +91,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.secondaryBackgroundTextSwitch => BasicLineTheme(
+      SwitchThemeStrategy.secondaryBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.secondaryColor,
             theme.textColor,
@@ -106,7 +108,7 @@ class SwitchContainer extends StatelessWidget {
           lineWidth: theme.lineWidth,
           spacing: theme.spacing,
         ),
-      SwitchContainerStrategy.accentBackgroundTextSwitch => BasicLineTheme(
+      SwitchThemeStrategy.accentBackgroundTextSwitch => BasicLineTheme(
           textColor: bestContrastPicker(
             theme.accentColor,
             theme.textColor,
@@ -127,18 +129,24 @@ class SwitchContainer extends StatelessWidget {
 
     return LineThemeProvider(
       theme: newTheme,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: newTheme.backgroundColor,
-          borderRadius: BorderRadius.all(
-            Radius.circular(theme.lineWidth * 4),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(theme.spacing),
-          child: child,
-        ),
-      ),
+      child: child,
     );
+  }
+}
+
+class SwitchContainer extends StatelessWidget {
+  const SwitchContainer({
+    super.key,
+    required this.child,
+    this.strategy = SwitchThemeStrategy.textIsBackground,
+  });
+
+  final Widget child;
+  final SwitchThemeStrategy strategy;
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchTheme(
+        strategy: strategy, child: RoundedContainer(child: child));
   }
 }
