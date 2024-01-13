@@ -15,24 +15,9 @@ enum SwitchThemeStrategy {
 extension ColorContrast on Color {
   double get brightness => 0.299 * red + 0.587 * green + 0.114 * blue;
 
-  double get luminance {
-    double convert(int color) {
-      double v = color / 255;
-      if (v <= 0.03928) {
-        return v / 12.92;
-      } else {
-        return pow(((v + 0.055) / 1.055), 2.4) as double;
-      }
-    }
-
-    return (0.2126 * convert(red)) +
-        (0.7152 * convert(green)) +
-        (0.0722 * convert(blue));
-  }
-
   double calculateContrast(Color other) {
-    final l1 = luminance;
-    final l2 = other.luminance;
+    final l1 = computeLuminance();
+    final l2 = other.computeLuminance();
     return (l1 >= l2) ? (l1 + .05) / (l2 + .05) : (l2 + .05) / (l1 + .05);
   }
 
