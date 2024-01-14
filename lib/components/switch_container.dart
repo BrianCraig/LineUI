@@ -1,5 +1,3 @@
-import 'dart:math' show pow;
-
 import 'package:flutter/widgets.dart';
 
 import 'line_theme.dart';

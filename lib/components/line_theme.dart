@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:line_ui/components/switch_container.dart';
 import 'package:line_ui/helpers/extensions.dart';
 import 'package:line_ui/helpers/math.dart' as math_ext;
 
@@ -135,7 +134,8 @@ class BasicLineTheme implements LineTheme {
   @override
   final double lineWidth, spacing;
 
-  bool get isLight => backgroundColor.luminance > textColor.luminance;
+  bool get isLight =>
+      backgroundColor.computeLuminance() > textColor.computeLuminance();
 
   @override
   String toString() =>
