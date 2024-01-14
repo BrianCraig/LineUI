@@ -17,3 +17,4 @@ export 'container.dart' show RoundedContainer;
 export 'entity_selector.dart' show SingleSelector;
 export 'icon.dart' show Icon;
 export 'label.dart' show Label;
+export 'switch.dart' show Switch;

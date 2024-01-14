@@ -12,6 +12,7 @@ import 'package:line_ui/screens/theme_selector_screen.dart';
 
 import 'providers/providers.dart';
 import 'screens/label_screen.dart';
+import 'screens/switch_screen.dart';
 
 void main() {
   runApp(
@@ -59,6 +60,11 @@ final List<_Page> _pages = [
     component: const LabelScreen(),
     path: 'label',
     buttonText: 'Label Component',
+  ),
+  _Page(
+    component: const SwitchScreen(),
+    path: 'switch',
+    buttonText: 'Switch Component',
   ),
   _Page(
     component: const TownTellyApp(),
