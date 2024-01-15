@@ -15,18 +15,20 @@ class SwitchScreen extends ConsumerWidget {
     return Scaffold(
       title: 'LinearInput Component',
       child: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: 320,
-              child: Switch(
-                value: ref.watch(switchStateProvider),
-                onChange: (value) {
-                  ref.read(switchStateProvider.notifier).state = value;
-                },
-              ),
+            Switch(
+              value: ref.watch(switchStateProvider),
+              onChange: (value) {
+                ref.read(switchStateProvider.notifier).state = value;
+              },
             ),
+            Spacing.one,
+            Button(
+                child: Text(
+              'Button reference',
+            ))
           ],
         ),
       ),
