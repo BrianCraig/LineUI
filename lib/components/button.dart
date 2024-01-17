@@ -71,21 +71,25 @@ class _ButtonState extends State<Button> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final theme = LineTheme.of(context);
+    final activeColor = switch (widget.style) {
+      ButtonStyle.primary => theme.primaryColor,
+      ButtonStyle.secondary => theme.secondaryColor,
+    };
     themes = {
       _ButtonStatus.inactive: _ButtonColors(
-        border: theme.primaryColor,
+        border: activeColor,
         background: theme.backgroundColor,
         text: theme.textColor,
       ),
       _ButtonStatus.mouseOver: _ButtonColors(
-        border: theme.primaryColor,
+        border: activeColor,
         background:
-            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.1),
-        text: theme.primaryColor,
+            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.05),
+        text: activeColor,
       ),
       _ButtonStatus.active: _ButtonColors(
-        border: theme.primaryColor,
-        background: theme.primaryColor,
+        border: activeColor,
+        background: activeColor,
         text: theme.backgroundColor,
       ),
     };
@@ -148,7 +152,16 @@ class _ButtonState extends State<Button> {
                 horizontal: theme.lineWidth * 4,
                 vertical: theme.lineWidth * 2,
               ),
-              child: widget.child,
+              child: LineThemeProvider(
+                theme: BasicLineTheme(
+                  textColor: colors.text,
+                  backgroundColor: colors.background,
+                  primaryColor: theme.primaryColor,
+                  secondaryColor: theme.secondaryColor,
+                  accentColor: theme.accentColor,
+                ),
+                child: widget.child,
+              ),
             ),
           ),
         ),
