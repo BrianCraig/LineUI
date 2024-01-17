@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/extensions.dart';
 import 'line_theme.dart';
 
 enum _ButtonStatus {
@@ -11,6 +12,31 @@ enum _ButtonStatus {
 enum ButtonStyle {
   primary,
   secondary,
+}
+
+class _ButtonColors {
+  final Color border, background, text;
+
+  _ButtonColors(
+      {required this.border, required this.background, required this.text});
+
+  static _ButtonColors lerp(_ButtonColors begin, _ButtonColors end, double t) =>
+      _ButtonColors(
+        border: ColorExtensions.lerp(begin.border, end.border, t),
+        background: ColorExtensions.lerp(begin.background, end.background, t),
+        text: ColorExtensions.lerp(begin.text, end.text, t),
+      );
+}
+
+class _ButtonColorsTween extends Tween<_ButtonColors> {
+  _ButtonColorsTween({super.begin, super.end});
+
+  @override
+  _ButtonColors lerp(double t) {
+    assert(begin != null);
+    assert(end != null);
+    return _ButtonColors.lerp(begin!, end!, t);
+  }
 }
 
 class Button extends StatefulWidget {
@@ -29,11 +55,11 @@ class Button extends StatefulWidget {
   State<Button> createState() => _ButtonState();
 }
 
-class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
+class _ButtonState extends State<Button> {
   bool active = false;
   bool mouseOver = false;
-  late AnimationController animation;
-  Animation<Color?>? colorAnimation;
+
+  late Map<_ButtonStatus, _ButtonColors> themes;
 
   _ButtonStatus get status => switch ((active, mouseOver)) {
         (true, _) => _ButtonStatus.active,
@@ -42,109 +68,88 @@ class _ButtonState extends State<Button> with SingleTickerProviderStateMixin {
       };
 
   @override
-  void initState() {
-    super.initState();
-    animation = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )..addListener(() {
-        setState(() {});
-      });
-  }
-
-  void setStateWithAnimation(void Function() function, LineTheme theme) {
-    setState(() {
-      _ButtonStatus initialStatus = status;
-      function();
-      if (initialStatus != status) {
-        colorAnimation = ColorTween(
-          begin: colorAnimation!.value,
-          end: calculateBorderColor(theme),
-        ).animate(animation);
-        animation.forward(from: 0);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    animation.dispose();
-    super.dispose();
-  }
-
-  Color calculateBorderColor(LineTheme theme) {
-    final Color style = switch (widget.style) {
-      ButtonStyle.primary => theme.primaryColor,
-      ButtonStyle.secondary => theme.secondaryColor,
-    };
-
-    return switch (status) {
-      _ButtonStatus.inactive => style.withOpacity(0.5),
-      _ButtonStatus.active => style,
-      _ButtonStatus.mouseOver => style.withOpacity(0.7),
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final theme = LineTheme.of(context);
+    themes = {
+      _ButtonStatus.inactive: _ButtonColors(
+        border: theme.primaryColor,
+        background: theme.backgroundColor,
+        text: theme.textColor,
+      ),
+      _ButtonStatus.mouseOver: _ButtonColors(
+        border: theme.primaryColor,
+        background:
+            ColorExtensions.lerp(theme.backgroundColor, theme.textColor, 0.1),
+        text: theme.primaryColor,
+      ),
+      _ButtonStatus.active: _ButtonColors(
+        border: theme.primaryColor,
+        background: theme.primaryColor,
+        text: theme.backgroundColor,
+      ),
     };
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
-    Color borderColor = calculateBorderColor(theme);
 
-    colorAnimation ??= ColorTween(
-      begin: borderColor,
-      end: borderColor,
-    ).animate(animation);
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.backgroundColor,
-        border: Border.all(
-          color: colorAnimation!.value!,
-          width: theme.lineWidth,
-          strokeAlign: BorderSide.strokeAlignInside,
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(theme.lineWidth * 4),
-        ),
-      ),
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (event) {
-          setStateWithAnimation(() {
-            mouseOver = true;
-          }, theme);
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (event) {
+        setState(() {
+          mouseOver = true;
+        });
+      },
+      onExit: (event) {
+        setState(() {
+          mouseOver = false;
+        });
+      },
+      child: GestureDetector(
+        onTapDown: (details) {
+          if (widget.onPressed case final onPressed?) {
+            onPressed();
+          }
+          setState(() {
+            active = true;
+          });
         },
-        onExit: (event) {
-          setStateWithAnimation(() {
-            mouseOver = false;
-          }, theme);
+        onTapUp: (details) {
+          setState(() {
+            active = false;
+          });
         },
-        child: GestureDetector(
-          onTapDown: (details) {
-            if (widget.onPressed case final onPressed?) {
-              onPressed();
-            }
-            setStateWithAnimation(() {
-              active = true;
-            }, theme);
-          },
-          onTapUp: (details) {
-            setStateWithAnimation(() {
-              active = false;
-            }, theme);
-          },
-          onTapCancel: () {
-            setStateWithAnimation(() {
-              active = false;
-            }, theme);
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: theme.lineWidth * 4,
-              vertical: theme.lineWidth * 2,
+        onTapCancel: () {
+          setState(() {
+            active = false;
+          });
+        },
+        behavior: HitTestBehavior.opaque,
+        child: TweenAnimationBuilder(
+          tween: _ButtonColorsTween(begin: themes[status], end: themes[status]),
+          duration: const Duration(milliseconds: 175),
+          builder: (BuildContext context, _ButtonColors colors, _) =>
+              DecoratedBox(
+            decoration: BoxDecoration(
+              color: colors.background,
+              border: Border.all(
+                color: colors.border,
+                width: theme.lineWidth,
+                strokeAlign: BorderSide.strokeAlignInside,
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(theme.lineWidth * 4),
+              ),
             ),
-            child: widget.child,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: theme.lineWidth * 4,
+                vertical: theme.lineWidth * 2,
+              ),
+              child: widget.child,
+            ),
           ),
         ),
       ),
