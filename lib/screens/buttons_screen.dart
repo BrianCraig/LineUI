@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter/widgets.dart' hide Text;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,16 +18,16 @@ class ButtonsScreen extends ConsumerWidget {
               children: [
                 Button(
                   child: Text(
-                    'Oh, hi mark',
+                    'Default button',
                   ),
                 ),
                 SizedBox(width: 16),
-                Button(
+                Button.text(
                   style: ButtonStyle.secondary,
-                  child: Text(
-                    'Oh, hi mark',
-                  ),
+                  text: 'Secondary Button',
                 ),
+                SizedBox(width: 16),
+                Button.icon(icon: Icons.add),
               ],
             ),
           ],

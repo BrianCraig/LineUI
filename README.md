@@ -9,13 +9,11 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 - `Button`s disabled state (`onPressed` = null)
 - `MultiSelector` with Animations.
 - animate `LinearInput` Label.
-- Add `Button.icon` and `Button.text` generators
 - Create `ToggleButton` with same generation structure as `Button` 
 
 ## Tech debt
 
 - Refactor `Spinner` impl. 
-- Review `Button`s animations design & colors, fix color memoization.
 - `LinearInput` labels, add bottom option, and remove hardcoded `Position` offset.
 
 ## Ideas

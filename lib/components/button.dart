@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Icon, Text;
 
 import '../helpers/extensions.dart';
 import 'line_theme.dart';
+import 'icon.dart';
+import 'text.dart';
 
 enum _ButtonStatus {
   inactive,
@@ -53,6 +55,20 @@ class Button extends StatefulWidget {
 
   @override
   State<Button> createState() => _ButtonState();
+
+  Button.text({
+    super.key,
+    required String text,
+    this.onPressed,
+    this.style = ButtonStyle.primary,
+  }) : child = Text(text);
+
+  Button.icon({
+    super.key,
+    required IconData icon,
+    this.onPressed,
+    this.style = ButtonStyle.primary,
+  }) : child = Icon(icon);
 }
 
 class _ButtonState extends State<Button> {
@@ -99,6 +115,37 @@ class _ButtonState extends State<Button> {
   Widget build(BuildContext context) {
     final theme = LineTheme.of(context);
 
+    renderBuilder(BuildContext context, _ButtonColors colors, _) =>
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.background,
+            border: Border.all(
+              color: colors.border,
+              width: theme.lineWidth,
+              strokeAlign: BorderSide.strokeAlignInside,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(theme.lineWidth * 4),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: theme.lineWidth * 4,
+              vertical: theme.lineWidth * 2,
+            ),
+            child: LineThemeProvider(
+              theme: BasicLineTheme(
+                textColor: colors.text,
+                backgroundColor: colors.background,
+                primaryColor: theme.primaryColor,
+                secondaryColor: theme.secondaryColor,
+                accentColor: theme.accentColor,
+              ),
+              child: widget.child,
+            ),
+          ),
+        );
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (event) {
@@ -134,36 +181,7 @@ class _ButtonState extends State<Button> {
         child: TweenAnimationBuilder(
           tween: _ButtonColorsTween(begin: themes[status], end: themes[status]),
           duration: const Duration(milliseconds: 175),
-          builder: (BuildContext context, _ButtonColors colors, _) =>
-              DecoratedBox(
-            decoration: BoxDecoration(
-              color: colors.background,
-              border: Border.all(
-                color: colors.border,
-                width: theme.lineWidth,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(theme.lineWidth * 4),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: theme.lineWidth * 4,
-                vertical: theme.lineWidth * 2,
-              ),
-              child: LineThemeProvider(
-                theme: BasicLineTheme(
-                  textColor: colors.text,
-                  backgroundColor: colors.background,
-                  primaryColor: theme.primaryColor,
-                  secondaryColor: theme.secondaryColor,
-                  accentColor: theme.accentColor,
-                ),
-                child: widget.child,
-              ),
-            ),
-          ),
+          builder: renderBuilder,
         ),
       ),
     );
