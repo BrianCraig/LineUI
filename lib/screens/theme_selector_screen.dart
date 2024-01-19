@@ -120,8 +120,9 @@ class ThemeSelectorScreen extends ConsumerWidget {
                         ValueDescription(entry.value, 'Use ${entry.key} theme'))
                     .toList(),
                 selectedItem: ValueDescription(ref.watch(lineThemeProvider)),
-                onChange: (descriptor) => {
-                  ref.read(lineThemeProvider.notifier).state = descriptor.value
+                onChange: (descriptor) {
+                  if (descriptor == null) return;
+                  ref.read(lineThemeProvider.notifier).state = descriptor.value;
                 },
               ),
             ),

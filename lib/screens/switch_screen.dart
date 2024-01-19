@@ -26,9 +26,10 @@ class SwitchScreen extends ConsumerWidget {
             ),
             Spacing.one,
             Button(
-                child: Text(
-              'Button reference',
-            ))
+              child: Text(
+                'Button reference',
+              ),
+            )
           ],
         ),
       ),

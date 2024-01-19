@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../components/components.dart';
 
-final singleSelectStateProvider = StateProvider<String>(
+final singleSelectStateProvider = StateProvider<String?>(
   (ref) => "fourth",
 );
 

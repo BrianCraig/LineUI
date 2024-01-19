@@ -30,13 +30,13 @@ class SingleSelector<T> extends StatefulWidget {
   const SingleSelector({
     super.key,
     required this.items,
-    required this.selectedItem,
+    this.selectedItem,
     required this.onChange,
   });
 
   final List<T> items;
   final T? selectedItem;
-  final void Function(T) onChange;
+  final void Function(T?) onChange;
 
   @override
   State<SingleSelector<T>> createState() => _SingleSelectorState<T>();
@@ -67,7 +67,11 @@ class _SingleSelectorState<T> extends State<SingleSelector<T>> {
         item: item,
         selected: widget.selectedItem == item,
         onToggle: () {
-          widget.onChange(item);
+          if (item == widget.selectedItem) {
+            widget.onChange(null);
+          } else {
+            widget.onChange(item);
+          }
         },
         themes: stateThemes,
       );
