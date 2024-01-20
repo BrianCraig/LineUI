@@ -10,6 +10,7 @@ Preview demo [here](https://briancraig.github.io/line_ui/).
 - `MultiSelector` with Animations.
 - animate `LinearInput` Label.
 - Create `ToggleButton` with same generation structure as `Button` 
+- Add `Snackbar`
 
 ## Tech debt
 
