@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide Text, Scaffold;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:line_ui/apps/quiz/app.dart';
 import 'package:line_ui/screens/entity_selector_screen.dart';
 import 'package:line_ui/screens/linear_input_screen.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -70,6 +71,11 @@ final List<_Page> _pages = [
     component: const TownTellyApp(),
     path: 'app/town-telly',
     buttonText: 'TownTelly App example',
+  ),
+  _Page(
+    component: const QuizApp(),
+    path: 'app/quiz',
+    buttonText: 'Quiz App example',
   ),
 ];
 
